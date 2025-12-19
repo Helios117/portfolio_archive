@@ -2,14 +2,21 @@
 
 import { motion } from 'framer-motion';
 import content from '@/data/content';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   return (
-    <footer className="relative py-12 border-t border-gold-500/10">
+    <footer className={`relative py-12 border-t transition-colors duration-500
+      ${isDark ? 'border-gold-500/10' : 'border-gold-500/20'}`}>
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0908] via-[#0d0c0a] to-transparent pointer-events-none" />
+      <div className={`absolute inset-0 pointer-events-none transition-colors duration-500
+        ${isDark 
+          ? 'bg-gradient-to-t from-[#0a0908] via-[#0d0c0a] to-transparent' 
+          : 'bg-gradient-to-t from-[#f8f6f1] via-[#fffdf8] to-transparent'}`} />
 
       <div className="relative max-w-6xl mx-auto px-6">
         {/* Greek meander pattern */}
@@ -65,29 +72,33 @@ export default function Footer() {
                 })}
               </svg>
             </div>
-            <span className="font-cinzel text-lg tracking-wider text-stone-300">
+            <span className={`font-cinzel text-lg tracking-wider transition-colors duration-500
+              ${isDark ? 'text-stone-200' : 'text-stone-700'}`}>
               Helios Archive
             </span>
           </motion.div>
 
           {/* Quote */}
-          <p className="font-cormorant text-stone-500 italic mb-6 max-w-md mx-auto">
+          <p className={`font-cormorant italic mb-6 max-w-md mx-auto transition-colors duration-500
+            ${isDark ? 'text-stone-400' : 'text-stone-500'}`}>
             &ldquo;Every artifact tells a story, every line of code a verse in the epic of creation.&rdquo;
           </p>
 
           {/* Copyright */}
-          <p className="font-cinzel text-xs tracking-widest text-gold-500/40">
+          <p className={`font-cinzel text-xs tracking-widest transition-colors duration-500
+            ${isDark ? 'text-gold-500/60' : 'text-gold-600/70'}`}>
             &copy; {currentYear} {content.meta.author}. Forged with passion.
           </p>
 
           {/* Built with badge */}
-          <div className="mt-6 flex items-center justify-center gap-2 text-stone-600 text-sm">
+          <div className={`mt-6 flex items-center justify-center gap-2 text-sm transition-colors duration-500
+            ${isDark ? 'text-stone-400' : 'text-stone-500'}`}>
             <span>Built with</span>
-            <span className="text-gold-500/60">React</span>
+            <span className={`${isDark ? 'text-gold-500' : 'text-gold-600'}`}>React</span>
             <span>•</span>
-            <span className="text-gold-500/60">Three.js</span>
+            <span className={`${isDark ? 'text-gold-500' : 'text-gold-600'}`}>Three.js</span>
             <span>•</span>
-            <span className="text-gold-500/60">Tailwind</span>
+            <span className={`${isDark ? 'text-gold-500' : 'text-gold-600'}`}>Tailwind</span>
           </div>
         </div>
       </div>

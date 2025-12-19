@@ -10,7 +10,7 @@ import { useTheme } from '@/context/ThemeContext';
 const HeroScene = dynamic(() => import('./three/HeroScene'), {
   ssr: false,
   loading: () => (
-    <div className="absolute inset-0 flex items-center justify-center bg-[#0a0908]">
+    <div className="absolute inset-0 flex items-center justify-center bg-background transition-colors">
       <div className="text-center">
         <div className="w-16 h-16 border-2 border-gold-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
         <p className="text-gold-500 font-cinzel text-lg tracking-widest">
@@ -66,11 +66,13 @@ export default function Hero() {
 
           {/* Title */}
           <h1 className="font-cinzel text-5xl md:text-7xl lg:text-8xl tracking-wider mb-4">
-            <span className="block text-gold-gradient">
+            <span className="block text-gold-gradient drop-shadow-[0_2px_10px_rgba(212,175,55,0.5)]">
               {content.hero.title.split(' ')[0]}
             </span>
             <span className={`block text-3xl md:text-4xl lg:text-5xl mt-2 tracking-[0.3em] transition-colors duration-500
-              ${theme === 'dark' ? 'text-stone-200' : 'text-stone-700'}`}>
+              ${theme === 'dark' 
+                ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' 
+                : 'text-stone-900 drop-shadow-[0_1px_3px_rgba(255,255,255,0.9)]'}`}>
               {content.hero.title.split(' ').slice(1).join(' ')}
             </span>
           </h1>
@@ -91,7 +93,9 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.2 }}
             className={`font-cormorant text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed italic transition-colors duration-500
-              ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}
+              ${theme === 'dark' 
+                ? 'text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]' 
+                : 'text-amber-800 drop-shadow-[0_1px_1px_rgba(255,255,255,0.5)]'}`}
           >
             {content.hero.subtitle}
           </motion.p>
@@ -114,12 +118,19 @@ export default function Hero() {
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <span className="font-cinzel text-xs tracking-[0.3em] text-gold-500/60 group-hover:text-gold-500 transition-colors">
+            <span className={`font-cinzel text-xs tracking-[0.3em] transition-colors
+              ${theme === 'dark' 
+                ? 'text-gold-500 group-hover:text-gold-400' 
+                : 'text-amber-700 group-hover:text-amber-600'}`}>
               {content.hero.scrollText}
             </span>
-            <div className="w-6 h-10 border-2 border-gold-500/30 rounded-full p-1 group-hover:border-gold-500/60 transition-colors">
+            <div className={`w-6 h-10 border-2 rounded-full p-1 transition-colors
+              ${theme === 'dark' 
+                ? 'border-gold-500/50 group-hover:border-gold-500' 
+                : 'border-amber-600/50 group-hover:border-amber-600'}`}>
               <motion.div
-                className="w-1.5 h-1.5 bg-gold-500 rounded-full mx-auto"
+                className={`w-1.5 h-1.5 rounded-full mx-auto
+                  ${theme === 'dark' ? 'bg-gold-500' : 'bg-amber-600'}`}
                 animate={{ y: [0, 16, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
               />
@@ -132,7 +143,7 @@ export default function Hero() {
       <div className={`absolute bottom-0 left-0 right-0 h-32 z-20 pointer-events-none transition-colors duration-500
         ${theme === 'dark' 
           ? 'bg-linear-to-t from-[#0a0908] to-transparent' 
-          : 'bg-linear-to-t from-[#f5f5f0] to-transparent'
+          : 'bg-linear-to-t from-[#fffdf8] to-transparent'
         }`} 
       />
     </section>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import content from '@/data/content';
+import { useTheme } from '@/context/ThemeContext';
 
 const socialIcons: Record<string, React.ReactNode> = {
   github: (
@@ -28,6 +29,8 @@ const socialIcons: Record<string, React.ReactNode> = {
 };
 
 export default function Contact() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [formState, setFormState] = useState({
     name: '',
     email: '',
@@ -61,7 +64,8 @@ export default function Contact() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="font-cinzel text-4xl md:text-5xl text-stone-100 mb-4 tracking-wide">
+          <h2 className={`font-cinzel text-4xl md:text-5xl mb-4 tracking-wide transition-colors duration-500
+            ${isDark ? 'text-white' : 'text-stone-800'}`}>
             {content.contact.heading}
           </h2>
           <div className="flex items-center justify-center gap-4 mb-6">
@@ -69,7 +73,8 @@ export default function Contact() {
             <div className="w-3 h-3 rotate-45 border-2 border-gold-500/50" />
             <div className="h-px w-24 bg-gradient-to-l from-transparent to-gold-500/50" />
           </div>
-          <p className="font-cormorant text-xl text-stone-400 italic">
+          <p className={`font-cormorant text-xl italic transition-colors duration-500
+            ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
             {content.contact.subheading}
           </p>
         </motion.div>
@@ -82,7 +87,10 @@ export default function Contact() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative"
         >
-          <div className="relative bg-gradient-to-br from-[#1a1816] via-[#141210] to-[#0d0c0a] p-8 md:p-12 rounded-sm">
+          <div className={`relative p-8 md:p-12 rounded-sm transition-colors duration-500
+            ${isDark 
+              ? 'bg-gradient-to-br from-[#1a1816] via-[#141210] to-[#0d0c0a]' 
+              : 'bg-gradient-to-br from-[#f5f3f0] via-[#ebe8e4] to-[#e0ddd8] shadow-lg'}`}>
             {/* Texture overlay */}
             <div 
               className="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none rounded-sm"
@@ -106,7 +114,8 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="relative space-y-6">
               {/* Name field */}
               <div>
-                <label className="block font-cinzel text-sm tracking-widest text-gold-500/80 mb-2">
+                <label className={`block font-cinzel text-sm tracking-widest mb-2 transition-colors duration-500
+                  ${isDark ? 'text-gold-500' : 'text-amber-700'}`}>
                   YOUR NAME
                 </label>
                 <input
@@ -114,17 +123,19 @@ export default function Contact() {
                   value={formState.name}
                   onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                   required
-                  className="w-full px-4 py-3 bg-black/30 border border-gold-500/20 rounded-sm
-                    font-cormorant text-lg text-stone-200 placeholder-stone-600
-                    focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/30
-                    transition-all"
+                  className={`w-full px-4 py-3 rounded-sm font-cormorant text-lg transition-all
+                    focus:outline-none focus:ring-1
+                    ${isDark 
+                      ? 'bg-black/30 border border-gold-500/30 text-white placeholder-stone-500 focus:border-gold-500/60 focus:ring-gold-500/30' 
+                      : 'bg-white border border-stone-300 text-stone-800 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-500/30'}`}
                   placeholder="Enter your name..."
                 />
               </div>
 
               {/* Email field */}
               <div>
-                <label className="block font-cinzel text-sm tracking-widest text-gold-500/80 mb-2">
+                <label className={`block font-cinzel text-sm tracking-widest mb-2 transition-colors duration-500
+                  ${isDark ? 'text-gold-500' : 'text-amber-700'}`}>
                   YOUR EMAIL
                 </label>
                 <input
@@ -132,17 +143,19 @@ export default function Contact() {
                   value={formState.email}
                   onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                   required
-                  className="w-full px-4 py-3 bg-black/30 border border-gold-500/20 rounded-sm
-                    font-cormorant text-lg text-stone-200 placeholder-stone-600
-                    focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/30
-                    transition-all"
+                  className={`w-full px-4 py-3 rounded-sm font-cormorant text-lg transition-all
+                    focus:outline-none focus:ring-1
+                    ${isDark 
+                      ? 'bg-black/30 border border-gold-500/30 text-white placeholder-stone-500 focus:border-gold-500/60 focus:ring-gold-500/30' 
+                      : 'bg-white border border-stone-300 text-stone-800 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-500/30'}`}
                   placeholder="Enter your email..."
                 />
               </div>
 
               {/* Message field */}
               <div>
-                <label className="block font-cinzel text-sm tracking-widest text-gold-500/80 mb-2">
+                <label className={`block font-cinzel text-sm tracking-widest mb-2 transition-colors duration-500
+                  ${isDark ? 'text-gold-500' : 'text-amber-700'}`}>
                   YOUR MESSAGE
                 </label>
                 <textarea
@@ -150,10 +163,11 @@ export default function Contact() {
                   onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 bg-black/30 border border-gold-500/20 rounded-sm
-                    font-cormorant text-lg text-stone-200 placeholder-stone-600
-                    focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/30
-                    transition-all resize-none"
+                  className={`w-full px-4 py-3 rounded-sm font-cormorant text-lg transition-all resize-none
+                    focus:outline-none focus:ring-1
+                    ${isDark 
+                      ? 'bg-black/30 border border-gold-500/30 text-white placeholder-stone-500 focus:border-gold-500/60 focus:ring-gold-500/30' 
+                      : 'bg-white border border-stone-300 text-stone-800 placeholder-stone-400 focus:border-amber-600 focus:ring-amber-500/30'}`}
                   placeholder="Speak your mind..."
                 />
               </div>
@@ -189,12 +203,14 @@ export default function Contact() {
 
             {/* Direct contact & social links */}
             <div className="text-center">
-              <p className="font-cormorant text-stone-400 mb-4">
+              <p className={`font-cormorant mb-4 transition-colors duration-500
+                ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
                 Reach me directly at
               </p>
               <a
                 href={`mailto:${content.contact.email}`}
-                className="font-cinzel text-lg text-gold-500 hover:text-gold-400 transition-colors"
+                className={`font-cinzel text-lg transition-colors
+                  ${isDark ? 'text-gold-400 hover:text-gold-300' : 'text-amber-700 hover:text-amber-600'}`}
               >
                 {content.contact.email}
               </a>
@@ -211,11 +227,11 @@ export default function Contact() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.1, y: -3 }}
-                    className="w-12 h-12 flex items-center justify-center
-                      border border-gold-500/30 rounded-sm text-stone-400
-                      hover:text-gold-500 hover:border-gold-500/60 hover:bg-gold-500/10
-                      transition-all"
+                    whileHover={{ scale: 1.05 }}
+                    className={`w-12 h-12 flex items-center justify-center rounded-sm transition-all duration-300
+                      ${isDark 
+                        ? 'border border-gold-500/30 text-stone-400 hover:text-gold-500 hover:border-gold-500/60 hover:bg-gold-500/10' 
+                        : 'border border-stone-300 text-stone-500 hover:text-amber-700 hover:border-amber-600 hover:bg-amber-50'}`}
                     title={social.platform}
                   >
                     {socialIcons[social.icon] || social.platform.charAt(0)}
@@ -226,7 +242,8 @@ export default function Contact() {
           </div>
 
           {/* Shadow */}
-          <div className="absolute -bottom-4 left-8 right-8 h-8 bg-black/40 blur-xl rounded-full" />
+          <div className={`absolute -bottom-4 left-8 right-8 h-8 blur-xl rounded-full transition-opacity duration-500
+            ${isDark ? 'bg-black/40' : 'bg-stone-400/20'}`} />
         </motion.div>
       </div>
     </section>

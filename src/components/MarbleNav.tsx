@@ -14,12 +14,14 @@ function NavTablet({
   link, 
   index, 
   isActive,
-  onClick 
+  onClick,
+  isDark
 }: { 
   link: NavLink; 
   index: number; 
   isActive: boolean;
   onClick: () => void;
+  isDark: boolean;
 }) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -60,16 +62,24 @@ function NavTablet({
           relative px-6 py-3 rounded-sm overflow-hidden
           transition-all duration-500 ease-out
           ${isActive 
-            ? 'bg-gradient-to-br from-[#f5f5f0] via-[#e8e4dc] to-[#d9d5cd]' 
-            : 'bg-gradient-to-br from-[#2a2825] via-[#1f1d1a] to-[#15140f]'
+            ? isDark 
+              ? 'bg-gradient-to-br from-[#f5f5f0] via-[#e8e4dc] to-[#d9d5cd]' 
+              : 'bg-gradient-to-br from-amber-600 via-amber-500 to-amber-600'
+            : isDark
+              ? 'bg-gradient-to-br from-[#2a2825] via-[#1f1d1a] to-[#15140f]'
+              : 'bg-gradient-to-br from-white via-[#fdfcfa] to-[#f8f6f2] border border-stone-200'
           }
         `}
         style={{
           boxShadow: isActive 
             ? '0 10px 40px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255,255,255,0.2)' 
             : isHovered 
-              ? '0 8px 30px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(255,255,255,0.1)'
-              : '0 4px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)',
+              ? isDark 
+                ? '0 8px 30px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(255,255,255,0.1)'
+                : '0 8px 30px rgba(180, 130, 40, 0.15), inset 0 1px 0 rgba(255,255,255,0.5)'
+              : isDark
+                ? '0 4px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)'
+                : '0 2px 8px rgba(0,0,0,0.08)',
           transform: `translateZ(${isActive ? 20 : isHovered ? 10 : 0}px)`,
         }}
       >
@@ -86,10 +96,10 @@ function NavTablet({
           className={`
             absolute inset-0 rounded-sm border transition-all duration-500
             ${isActive 
-              ? 'border-gold-500/60' 
+              ? isDark ? 'border-gold-500/60' : 'border-amber-300'
               : isHovered 
-                ? 'border-gold-500/30' 
-                : 'border-gold-500/10'
+                ? isDark ? 'border-gold-500/30' : 'border-amber-400/50'
+                : isDark ? 'border-gold-500/10' : 'border-transparent'
             }
           `}
         />
@@ -99,8 +109,8 @@ function NavTablet({
           className={`
             absolute inset-0.5 rounded-sm border transition-all duration-500
             ${isActive 
-              ? 'border-white/20' 
-              : 'border-white/5'
+              ? isDark ? 'border-white/20' : 'border-white/40'
+              : isDark ? 'border-white/5' : 'border-white/20'
             }
           `}
         />
@@ -111,15 +121,17 @@ function NavTablet({
             relative z-10 font-cinzel text-sm tracking-[0.3em] uppercase
             transition-all duration-500
             ${isActive 
-              ? 'text-[#1a1814] font-semibold' 
-              : 'text-stone-400 group-hover:text-gold-400'
+              ? isDark ? 'text-[#1a1814] font-semibold' : 'text-white font-semibold'
+              : isDark 
+                ? 'text-stone-300 group-hover:text-gold-400'
+                : 'text-stone-700 group-hover:text-amber-700'
             }
           `}
           style={{
             textShadow: isActive 
               ? 'none' 
               : isHovered 
-                ? '0 0 20px rgba(212, 175, 55, 0.5)' 
+                ? isDark ? '0 0 20px rgba(212, 175, 55, 0.5)' : 'none'
                 : 'none',
           }}
         >
@@ -168,7 +180,7 @@ export default function MarbleNav({ className = '' }: MarbleNavProps) {
       <div className={`absolute inset-0 pointer-events-none transition-colors duration-500
         ${theme === 'dark' 
           ? 'bg-linear-to-b from-[#0a0908] via-[#0a0908]/80 to-transparent' 
-          : 'bg-linear-to-b from-[#f5f5f0] via-[#f5f5f0]/80 to-transparent'
+          : 'bg-linear-to-b from-[#fffdf8] via-[#fffdf8]/80 to-transparent'
         }`} 
       />
       
@@ -234,6 +246,7 @@ export default function MarbleNav({ className = '' }: MarbleNavProps) {
                 index={index}
                 isActive={activeId === link.id}
                 onClick={() => setActiveId(link.id)}
+                isDark={theme === 'dark'}
               />
             ))}
             

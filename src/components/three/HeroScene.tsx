@@ -104,7 +104,7 @@ function BackgroundSphere({ isDark = true }: { isDark?: boolean }) {
       <sphereGeometry args={[1, 64, 64]} />
       <meshBasicMaterial 
         side={THREE.BackSide}
-        color={isDark ? '#0a0908' : '#e8e4dc'}
+        color={isDark ? '#0a0908' : '#faf8f3'}
       />
     </mesh>
   );
@@ -294,8 +294,8 @@ export default function HeroScene({ className = '' }: HeroSceneProps) {
           far={100}
         />
         
-        <color attach="background" args={[isDark ? '#0a0908' : '#e8e4dc']} />
-        <fog attach="fog" args={[isDark ? '#0a0908' : '#e8e4dc', 8, 30]} />
+        <color attach="background" args={[isDark ? '#0a0908' : '#faf8f3']} />
+        <fog attach="fog" args={[isDark ? '#0a0908' : '#faf8f3', 8, 30]} />
         
         <Suspense fallback={null}>
           <SceneContent isDark={isDark} />

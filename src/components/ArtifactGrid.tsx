@@ -3,14 +3,16 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import content, { Project } from '@/data/content';
+import { useTheme } from '@/context/ThemeContext';
 
 interface ArtifactCardProps {
   project: Project;
   index: number;
   onClick: () => void;
+  isDark: boolean;
 }
 
-function ArtifactCard({ project, index, onClick }: ArtifactCardProps) {
+function ArtifactCard({ project, index, onClick, isDark }: ArtifactCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -40,11 +42,18 @@ function ArtifactCard({ project, index, onClick }: ArtifactCardProps) {
       >
         {/* Main card body */}
         <div 
-          className="relative bg-gradient-to-br from-[#1f1d1a] via-[#171512] to-[#0f0e0c] p-6"
+          className={`relative p-6 transition-colors duration-500
+            ${isDark 
+              ? 'bg-gradient-to-br from-[#1f1d1a] via-[#171512] to-[#0f0e0c]' 
+              : 'bg-gradient-to-br from-white via-[#fdfcfa] to-[#f8f7f4] border border-stone-200'}`}
           style={{
             boxShadow: isHovered 
-              ? '0 25px 50px -12px rgba(0,0,0,0.6), 0 0 40px rgba(212, 175, 55, 0.1)' 
-              : '0 10px 30px -10px rgba(0,0,0,0.5)',
+              ? isDark 
+                ? '0 25px 50px -12px rgba(0,0,0,0.6), 0 0 40px rgba(212, 175, 55, 0.1)' 
+                : '0 25px 50px -12px rgba(0,0,0,0.1), 0 0 30px rgba(212, 175, 55, 0.1)'
+              : isDark
+                ? '0 10px 30px -10px rgba(0,0,0,0.5)'
+                : '0 4px 20px -8px rgba(0,0,0,0.08)',
           }}
         >
           {/* Marble texture overlay */}
@@ -122,7 +131,8 @@ function ArtifactCard({ project, index, onClick }: ArtifactCardProps) {
           <div className="relative">
             {/* Title - like engraved text */}
             <h3 
-              className="font-cinzel text-xl text-stone-100 mb-3 tracking-wide"
+              className={`font-cinzel text-xl mb-3 tracking-wide transition-colors duration-500
+                ${isDark ? 'text-white' : 'text-stone-800'}`}
               style={{
                 textShadow: isHovered 
                   ? '0 0 30px rgba(212, 175, 55, 0.4)' 
@@ -140,7 +150,8 @@ function ArtifactCard({ project, index, onClick }: ArtifactCardProps) {
             </div>
 
             {/* Description */}
-            <p className="font-cormorant text-stone-400 text-lg leading-relaxed mb-4">
+            <p className={`font-cormorant text-lg leading-relaxed mb-4 transition-colors duration-500
+              ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
               {project.description}
             </p>
 
@@ -149,8 +160,11 @@ function ArtifactCard({ project, index, onClick }: ArtifactCardProps) {
               {project.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-2 py-1 text-xs font-medium tracking-wider uppercase
-                    bg-gold-500/10 text-gold-500/70 border border-gold-500/20 rounded-sm"
+                  className={`px-2 py-1 text-xs font-medium tracking-wider uppercase rounded-sm
+                    transition-colors duration-500
+                    ${isDark 
+                      ? 'bg-gold-500/15 text-gold-400 border border-gold-500/30' 
+                      : 'bg-amber-100 text-amber-700 border border-amber-300'}`}
                 >
                   {tag}
                 </span>
@@ -158,21 +172,26 @@ function ArtifactCard({ project, index, onClick }: ArtifactCardProps) {
             </div>
           </div>
 
-          {/* Hover reveal - "Inspect Artifact" text */}
+          {/* Hover reveal - "Inspect Artifact" bar at bottom - doesn't block content */}
           <motion.div
-            className="absolute inset-0 flex items-center justify-center bg-[#0a0908]/80 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 1 : 0 }}
+            className={`absolute bottom-0 left-0 right-0 flex items-center justify-center py-4 bg-gradient-to-t
+              ${isDark 
+                ? 'from-[#0a0908] via-[#0a0908]/95 to-transparent' 
+                : 'from-white via-white/95 to-transparent'}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-3 border-2 border-gold-500 rounded-full flex items-center justify-center">
-                <svg className="w-5 h-5 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex items-center gap-3">
+              <div className={`w-8 h-8 border-2 rounded-full flex items-center justify-center
+                ${isDark ? 'border-gold-500' : 'border-amber-600'}`}>
+                <svg className={`w-4 h-4 ${isDark ? 'text-gold-500' : 'text-amber-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
               </div>
-              <span className="font-cinzel text-gold-500 tracking-[0.3em] text-sm">
+              <span className={`font-cinzel tracking-[0.2em] text-sm
+                ${isDark ? 'text-gold-500' : 'text-amber-600'}`}>
                 INSPECT ARTIFACT
               </span>
             </div>
@@ -195,10 +214,12 @@ function ArtifactCard({ project, index, onClick }: ArtifactCardProps) {
 // Scroll/Modal component for viewing artifact details
 function ArtifactScroll({ 
   project, 
-  onClose 
+  onClose,
+  isDark 
 }: { 
   project: Project; 
   onClose: () => void;
+  isDark: boolean;
 }) {
   return (
     <motion.div
@@ -206,7 +227,8 @@ function ArtifactScroll({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0a0908]/95 backdrop-blur-md"
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md
+        ${isDark ? 'bg-[#0a0908]/95' : 'bg-stone-100/95'}`}
     >
       <motion.div
         initial={{ scale: 0.8, opacity: 0, y: 50 }}
@@ -216,8 +238,11 @@ function ArtifactScroll({
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-2xl max-h-[85vh] overflow-auto"
       >
-        {/* Scroll paper effect - Dark marble theme */}
-        <div className="relative bg-linear-to-b from-[#1f1d1a] via-[#171512] to-[#0f0e0c] p-8 rounded-sm border border-gold-500/20">
+        {/* Scroll paper effect - Theme aware */}
+        <div className={`relative p-8 rounded-sm border transition-colors duration-500
+          ${isDark 
+            ? 'bg-linear-to-b from-[#1f1d1a] via-[#171512] to-[#0f0e0c] border-gold-500/20' 
+            : 'bg-linear-to-b from-white via-[#fdfcfa] to-[#f8f7f4] border-amber-300'}`}>
           {/* Marble texture */}
           <div 
             className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none rounded-sm"
@@ -227,13 +252,15 @@ function ArtifactScroll({
           />
 
           {/* Decorative border */}
-          <div className="absolute inset-4 border-2 border-gold-500/20 rounded-sm pointer-events-none" />
-          <div className="absolute inset-6 border border-gold-500/10 rounded-sm pointer-events-none" />
+          <div className={`absolute inset-4 border-2 rounded-sm pointer-events-none
+            ${isDark ? 'border-gold-500/20' : 'border-amber-300/50'}`} />
+          <div className={`absolute inset-6 border rounded-sm pointer-events-none
+            ${isDark ? 'border-gold-500/10' : 'border-amber-200/50'}`} />
 
           {/* Corner ornaments */}
           {['top-4 left-4', 'top-4 right-4 rotate-90', 'bottom-4 left-4 -rotate-90', 'bottom-4 right-4 rotate-180'].map((pos, i) => (
             <div key={i} className={`absolute ${pos} w-8 h-8`}>
-              <svg viewBox="0 0 32 32" className="w-full h-full text-gold-600/60">
+              <svg viewBox="0 0 32 32" className={`w-full h-full ${isDark ? 'text-gold-600/60' : 'text-amber-600/60'}`}>
                 <path d="M0 0 L8 0 L8 2 L2 2 L2 8 L0 8 Z" fill="currentColor" />
                 <path d="M4 4 L12 4 L12 6 L6 6 L6 12 L4 12 Z" fill="currentColor" opacity="0.5" />
               </svg>
@@ -248,17 +275,19 @@ function ArtifactScroll({
               e.stopPropagation();
               onClose();
             }}
-            className="absolute top-4 right-4 z-10 w-12 h-12 flex items-center justify-center
-              bg-gradient-to-br from-[#1a1814] to-[#0f0e0c] rounded-sm
-              border border-gold-500/30 hover:border-gold-500/60
-              shadow-lg hover:shadow-gold-500/20
-              transition-all duration-300 group"
+            className={`absolute top-4 right-4 z-10 w-12 h-12 flex items-center justify-center
+              rounded-sm shadow-lg transition-all duration-300 group
+              ${isDark 
+                ? 'bg-gradient-to-br from-[#1a1814] to-[#0f0e0c] border border-gold-500/30 hover:border-gold-500/60 hover:shadow-gold-500/20' 
+                : 'bg-gradient-to-br from-white to-stone-100 border border-amber-300 hover:border-amber-500 hover:shadow-amber-500/20'}`}
           >
             {/* Inner glow effect */}
-            <div className="absolute inset-0.5 bg-gradient-to-br from-gold-500/5 to-transparent rounded-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className={`absolute inset-0.5 bg-gradient-to-br to-transparent rounded-sm opacity-0 group-hover:opacity-100 transition-opacity
+              ${isDark ? 'from-gold-500/5' : 'from-amber-500/10'}`} />
             {/* X icon */}
             <svg 
-              className="w-5 h-5 text-gold-500/70 group-hover:text-gold-400 transition-colors relative z-10" 
+              className={`w-5 h-5 transition-colors relative z-10
+                ${isDark ? 'text-gold-500/70 group-hover:text-gold-400' : 'text-amber-600/70 group-hover:text-amber-600'}`}
               fill="none" 
               viewBox="0 0 24 24" 
               stroke="currentColor"
@@ -266,32 +295,40 @@ function ArtifactScroll({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
             {/* Corner accents */}
-            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-gold-500/40 group-hover:border-gold-500/70 transition-colors" />
-            <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-gold-500/40 group-hover:border-gold-500/70 transition-colors" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-gold-500/40 group-hover:border-gold-500/70 transition-colors" />
-            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-gold-500/40 group-hover:border-gold-500/70 transition-colors" />
+            <div className={`absolute top-0 left-0 w-2 h-2 border-t border-l transition-colors
+              ${isDark ? 'border-gold-500/40 group-hover:border-gold-500/70' : 'border-amber-400/40 group-hover:border-amber-500/70'}`} />
+            <div className={`absolute top-0 right-0 w-2 h-2 border-t border-r transition-colors
+              ${isDark ? 'border-gold-500/40 group-hover:border-gold-500/70' : 'border-amber-400/40 group-hover:border-amber-500/70'}`} />
+            <div className={`absolute bottom-0 left-0 w-2 h-2 border-b border-l transition-colors
+              ${isDark ? 'border-gold-500/40 group-hover:border-gold-500/70' : 'border-amber-400/40 group-hover:border-amber-500/70'}`} />
+            <div className={`absolute bottom-0 right-0 w-2 h-2 border-b border-r transition-colors
+              ${isDark ? 'border-gold-500/40 group-hover:border-gold-500/70' : 'border-amber-400/40 group-hover:border-amber-500/70'}`} />
           </button>
 
           {/* Content */}
           <div className="relative">
             {/* Title */}
-            <h2 className="font-cinzel text-3xl text-gold-400 mb-2 tracking-wide">
+            <h2 className={`font-cinzel text-3xl mb-2 tracking-wide
+              ${isDark ? 'text-gold-400' : 'text-amber-700'}`}>
               {project.title}
             </h2>
 
             {/* Decorative line */}
             <div className="flex items-center gap-4 mb-6">
-              <div className="h-0.5 flex-1 bg-linear-to-r from-gold-500 to-transparent" />
+              <div className={`h-0.5 flex-1 bg-linear-to-r to-transparent
+                ${isDark ? 'from-gold-500' : 'from-amber-500'}`} />
               <div className="flex gap-1">
-                <div className="w-1.5 h-1.5 bg-gold-500 rotate-45" />
-                <div className="w-1.5 h-1.5 bg-gold-500/60 rotate-45" />
-                <div className="w-1.5 h-1.5 bg-gold-500/30 rotate-45" />
+                <div className={`w-1.5 h-1.5 rotate-45 ${isDark ? 'bg-gold-500' : 'bg-amber-500'}`} />
+                <div className={`w-1.5 h-1.5 rotate-45 ${isDark ? 'bg-gold-500/60' : 'bg-amber-500/60'}`} />
+                <div className={`w-1.5 h-1.5 rotate-45 ${isDark ? 'bg-gold-500/30' : 'bg-amber-500/30'}`} />
               </div>
-              <div className="h-0.5 flex-1 bg-linear-to-l from-gold-500 to-transparent" />
+              <div className={`h-0.5 flex-1 bg-linear-to-l to-transparent
+                ${isDark ? 'from-gold-500' : 'from-amber-500'}`} />
             </div>
 
             {/* Description */}
-            <p className="font-cormorant text-xl text-stone-300 leading-relaxed mb-6">
+            <p className={`font-cormorant text-xl leading-relaxed mb-6
+              ${isDark ? 'text-stone-200' : 'text-stone-700'}`}>
               {project.longDescription || project.description}
             </p>
 
@@ -300,8 +337,10 @@ function ArtifactScroll({
               {project.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 text-sm font-medium tracking-wider
-                    bg-gold-500/10 text-gold-400 border border-gold-500/30 rounded-sm"
+                  className={`px-3 py-1 text-sm font-medium tracking-wider rounded-sm
+                    ${isDark 
+                      ? 'bg-gold-500/10 text-gold-400 border border-gold-500/30' 
+                      : 'bg-amber-100 text-amber-700 border border-amber-300'}`}
                 >
                   {tag}
                 </span>
@@ -356,6 +395,8 @@ interface ArtifactGridProps {
 
 export default function ArtifactGrid({ className = '' }: ArtifactGridProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   return (
     <>
@@ -369,7 +410,8 @@ export default function ArtifactGrid({ className = '' }: ArtifactGridProps) {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h2 className="font-cinzel text-4xl md:text-5xl text-stone-100 mb-4 tracking-wide">
+            <h2 className={`font-cinzel text-4xl md:text-5xl mb-4 tracking-wide transition-colors duration-500
+              ${isDark ? 'text-white' : 'text-stone-800'}`}>
               The Artifacts
             </h2>
             <div className="flex items-center justify-center gap-4 mb-6">
@@ -377,7 +419,8 @@ export default function ArtifactGrid({ className = '' }: ArtifactGridProps) {
               <div className="w-3 h-3 rotate-45 border-2 border-gold-500/50" />
               <div className="h-px w-24 bg-gradient-to-l from-transparent to-gold-500/50" />
             </div>
-            <p className="font-cormorant text-xl text-stone-400 max-w-2xl mx-auto">
+            <p className={`font-cormorant text-xl max-w-2xl mx-auto transition-colors duration-500
+              ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
               A curated collection of digital creations, each forged with passion and purpose
             </p>
           </motion.div>
@@ -392,6 +435,7 @@ export default function ArtifactGrid({ className = '' }: ArtifactGridProps) {
                 project={project}
                 index={index}
                 onClick={() => setSelectedProject(project)}
+                isDark={isDark}
               />
             ))}
           </div>
@@ -404,6 +448,7 @@ export default function ArtifactGrid({ className = '' }: ArtifactGridProps) {
           <ArtifactScroll
             project={selectedProject}
             onClose={() => setSelectedProject(null)}
+            isDark={isDark}
           />
         )}
       </AnimatePresence>

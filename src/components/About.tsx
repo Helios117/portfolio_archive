@@ -2,8 +2,12 @@
 
 import { motion } from 'framer-motion';
 import content from '@/data/content';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function About() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  
   return (
     <section id="about" className="relative py-32 overflow-hidden">
       {/* Background decoration */}
@@ -53,7 +57,8 @@ export default function About() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="font-cinzel text-4xl md:text-5xl text-stone-100 mb-4 tracking-wide">
+          <h2 className={`font-cinzel text-4xl md:text-5xl mb-4 tracking-wide transition-colors duration-500
+            ${isDark ? 'text-white' : 'text-stone-800'}`}>
             {content.about.heading}
           </h2>
           <div className="flex items-center justify-center gap-4">
@@ -72,7 +77,10 @@ export default function About() {
           className="relative"
         >
           {/* Tablet background */}
-          <div className="relative bg-gradient-to-br from-[#1a1816] via-[#141210] to-[#0d0c0a] p-8 md:p-12 rounded-sm">
+          <div className={`relative p-8 md:p-12 rounded-sm transition-colors duration-500
+            ${isDark 
+              ? 'bg-gradient-to-br from-[#1a1816] via-[#141210] to-[#0d0c0a]' 
+              : 'bg-gradient-to-br from-white via-[#faf9f6] to-[#f5f3ef] shadow-lg shadow-stone-300/50 border border-stone-200'}`}>
             {/* Marble texture overlay */}
             <div 
               className="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none rounded-sm"
@@ -104,7 +112,8 @@ export default function About() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                  className="font-cormorant text-lg md:text-xl text-stone-300 leading-relaxed"
+                  className={`font-cormorant text-lg md:text-xl leading-relaxed transition-colors duration-500
+                    ${isDark ? 'text-stone-200' : 'text-stone-700'}`}
                 >
                   {index === 0 && (
                     <span className="float-left font-cinzel text-5xl text-gold-500 mr-3 mt-1 leading-none">
@@ -128,7 +137,8 @@ export default function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              <h3 className="font-cinzel text-lg text-gold-500 tracking-widest mb-8 text-center">
+              <h3 className={`font-cinzel text-lg tracking-widest mb-8 text-center transition-colors duration-500
+                ${isDark ? 'text-gold-500' : 'text-amber-700'}`}>
                 SACRED ARTS
               </h3>
               <div className="space-y-6">
@@ -140,7 +150,8 @@ export default function About() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.6 + categoryIndex * 0.1 }}
                   >
-                    <h4 className="font-cinzel text-sm text-amber-400/80 tracking-wider mb-3 text-center uppercase">
+                    <h4 className={`font-cinzel text-sm tracking-wider mb-3 text-center uppercase transition-colors duration-500
+                      ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>
                       {category.name}
                     </h4>
                     <div className="flex flex-wrap justify-center gap-2">
@@ -152,9 +163,11 @@ export default function About() {
                           viewport={{ once: true }}
                           transition={{ duration: 0.3, delay: 0.7 + categoryIndex * 0.1 + skillIndex * 0.03 }}
                           whileHover={{ scale: 1.05, y: -2 }}
-                          className="px-3 py-1.5 bg-gold-500/10 border border-gold-500/20 rounded-sm
-                            font-cinzel text-xs tracking-wider text-stone-300
-                            hover:bg-gold-500/20 hover:border-gold-500/40 transition-all cursor-default"
+                          className={`px-3 py-1.5 border rounded-sm font-cinzel text-xs tracking-wider
+                            transition-all cursor-default
+                            ${isDark 
+                              ? 'bg-gold-500/10 border-gold-500/30 text-stone-200 hover:bg-gold-500/20 hover:border-gold-500/50' 
+                              : 'bg-amber-50 border-amber-300 text-stone-700 hover:bg-amber-100 hover:border-amber-400'}`}
                         >
                           {skill}
                         </motion.span>
@@ -167,7 +180,8 @@ export default function About() {
           </div>
 
           {/* Bottom shadow */}
-          <div className="absolute -bottom-4 left-8 right-8 h-8 bg-black/40 blur-xl rounded-full" />
+          <div className={`absolute -bottom-4 left-8 right-8 h-8 blur-xl rounded-full transition-opacity duration-500
+            ${isDark ? 'bg-black/40' : 'bg-black/10'}`} />
         </motion.div>
       </div>
     </section>

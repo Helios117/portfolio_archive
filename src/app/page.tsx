@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-[#0a0908]">
+    <main className="relative min-h-screen bg-background transition-colors duration-500">
       {/* Navigation */}
       <MarbleNav />
       
