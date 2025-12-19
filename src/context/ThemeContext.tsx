@@ -18,13 +18,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
-    // Check for saved theme preference or system preference
+    // Check for saved theme preference, default to dark
     const savedTheme = localStorage.getItem('helios-theme') as Theme | null;
     if (savedTheme) {
       setTheme(savedTheme);
-    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-      setTheme('light');
     }
+    // Dark mode is the default, no system preference check
   }, []);
 
   useEffect(() => {

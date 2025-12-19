@@ -194,7 +194,7 @@ const content: SiteContent = {
     email: "suraj.vaidyanathan@gmail.com",
     socialLinks: [
       { platform: "GitHub", url: "https://github.com/Helios117", icon: "github" },
-      { platform: "LinkedIn", url: "https://linkedin.com/in/suraj-vaidyanathan-6bb080356", icon: "linkedin" },
+      { platform: "LinkedIn", url: "https://www.linkedin.com/in/suraj-vaidyanathan-6bb080356/", icon: "linkedin" },
       { platform: "LeetCode", url: "https://leetcode.com/u/Lord_Helios/", icon: "leetcode" },
     ],
   },

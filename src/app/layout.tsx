@@ -17,12 +17,12 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "The Marble Archive | Suraj Vaidyanathan",
+  title: "Helios Archive | Suraj Vaidyanathan",
   description: "Helios - A curated collection of digital artifacts and creative works. Where code becomes art and digital dreams take form.",
   keywords: ["portfolio", "developer", "creative", "3D", "web development", "react", "three.js", "Suraj Vaidyanathan", "Helios"],
   authors: [{ name: "Suraj Vaidyanathan" }],
   openGraph: {
-    title: "The Marble Archive | Suraj Vaidyanathan",
+    title: "Helios Archive | Suraj Vaidyanathan",
     description: "Helios - A curated collection of digital artifacts and creative works",
     type: "website",
   },
