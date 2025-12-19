@@ -26,10 +26,15 @@ export interface HeroContent {
   model3DPath?: string;
 }
 
+export interface SkillCategory {
+  name: string;
+  skills: string[];
+}
+
 export interface AboutContent {
   heading: string;
   paragraphs: string[];
-  skills: string[];
+  skillCategories: SkillCategory[];
 }
 
 export interface ContactContent {
@@ -58,16 +63,16 @@ export interface SiteContent {
 
 const content: SiteContent = {
   meta: {
-    title: "The Marble Archive | Portfolio",
-    description: "A curated collection of digital artifacts and creative works",
-    author: "Your Name",
+    title: "Helios | Suraj Vaidyanathan",
+    description: "The digital realm of Helios - Full-stack developer, quantum enthusiast, and creator of digital artifacts",
+    author: "Suraj Vaidyanathan",
   },
 
   hero: {
-    title: "The Marble Archive",
-    subtitle: "Where Code Becomes Art & Digital Dreams Take Form",
-    scrollText: "Descend into the Archive",
-    model3DPath: "/models/bust.glb",
+    title: "Helios",
+    subtitle: "Illuminating the Digital Realm • Full-Stack Developer & Quantum Enthusiast",
+    scrollText: "Explore the Artifacts",
+    model3DPath: "/models/helios.glb",
   },
 
   nav: [
@@ -80,97 +85,117 @@ const content: SiteContent = {
   about: {
     heading: "The Chronicle",
     paragraphs: [
-      "I am a creator who dwells at the intersection of art and technology, forging digital experiences that transcend the ordinary.",
-      "With mastery over the sacred arts of React, Three.js, and the mystical forces of WebGL, I breathe life into static designs and transform mere concepts into immersive realities.",
-      "Each project in this archive represents a journey—a quest to push the boundaries of what's possible in the digital realm.",
+      "I am Helios, a full-stack developer from India traversing the intersection of code and creativity. My interests span machine learning, quantum computing, physics simulations, and the endless frontier of technology.",
+      "Beyond the digital realm, I am an avid reader, movie connoisseur, video game enthusiast, and audiophile—driven by an endless curiosity and passion for learning.",
+      "Each artifact in this archive represents a journey through complex problem spaces—from rendering light rays in virtual worlds to securing communications against quantum threats.",
     ],
-    skills: [
-      "React & Next.js",
-      "Three.js & WebGL",
-      "TypeScript",
-      "Node.js",
-      "Python",
-      "UI/UX Design",
-      "Creative Development",
-      "3D Visualization",
+    skillCategories: [
+      {
+        name: "Languages",
+        skills: ["C", "C++", "Python", "TypeScript", "JavaScript", "Java", "R", "HTML5", "CSS3", "LaTeX"],
+      },
+      {
+        name: "Frontend",
+        skills: ["React", "Next.js", "Tailwind CSS", "Vite", "Three.js", "WebGL"],
+      },
+      {
+        name: "Backend",
+        skills: ["Flask", "Django", "FastAPI", "Node.js"],
+      },
+      {
+        name: "Databases",
+        skills: ["PostgreSQL", "MySQL", "MongoDB", "SQLite", "Supabase", "Firebase"],
+      },
+      {
+        name: "ML & Data Science",
+        skills: ["PyTorch", "TensorFlow", "scikit-learn", "NumPy", "Pandas", "Matplotlib", "SciPy"],
+      },
+      {
+        name: "Cloud & DevOps",
+        skills: ["AWS", "Google Cloud", "GitHub Actions", "Docker"],
+      },
+      {
+        name: "Design & Creative",
+        skills: ["Blender", "Figma", "Adobe Photoshop", "Krita"],
+      },
+      {
+        name: "Tools & Other",
+        skills: ["Git", "Arduino", "FFmpeg", "Godot Engine", "Anaconda"],
+      },
     ],
   },
 
   projects: [
     {
       id: "project-1",
-      title: "Ethereal Commerce",
-      description: "A luxury e-commerce experience with immersive 3D product visualization",
-      longDescription: "An award-winning e-commerce platform that transforms online shopping into a gallery experience. Features include real-time 3D product rotation, AR try-on capabilities, and fluid micro-interactions.",
-      tags: ["React", "Three.js", "Stripe", "GSAP"],
-      image: "/images/projects/ethereal-commerce.jpg",
-      liveLink: "https://example.com",
-      githubLink: "https://github.com",
+      title: "Raytracing Engine",
+      description: "A 3D renderer built from scratch in C++ following the raytracing paradigm",
+      longDescription: "A complete raytracing engine implemented in C++ from first principles. This renderer simulates the physical behavior of light, including reflections, refractions, and shadows, to produce photorealistic images. Built following the 'Ray Tracing in a Weekend' guide with additional enhancements.",
+      tags: ["C++", "Computer Graphics", "Ray Tracing", "3D Rendering"],
+      image: "/images/projects/raytracing.jpg",
+      githubLink: "https://github.com/Helios117/raytracing",
       featured: true,
     },
     {
       id: "project-2",
-      title: "Neural Canvas",
-      description: "AI-powered generative art platform using machine learning",
-      longDescription: "A creative platform where users can generate unique artworks using neural networks. The system learns from classical art masters to create new, original compositions.",
-      tags: ["Python", "TensorFlow", "React", "WebGL"],
-      image: "/images/projects/neural-canvas.jpg",
-      liveLink: "https://example.com",
-      githubLink: "https://github.com",
+      title: "Photon",
+      description: "Post-quantum secure messaging application using Kyber lattice cryptography",
+      longDescription: "A cutting-edge secure messaging application that implements post-quantum cryptography using Kyber lattice-based encryption. Designed to withstand attacks from future quantum computers, ensuring long-term communication security in the quantum age.",
+      tags: ["TypeScript", "Cryptography", "Kyber", "Post-Quantum", "Security"],
+      image: "/images/projects/photon.jpg",
+      liveLink: "https://photon3.vercel.app",
+      githubLink: "https://github.com/Helios117/photon3",
       featured: true,
     },
     {
       id: "project-3",
-      title: "Sonic Realm",
-      description: "Spatial audio visualization experience in 3D space",
-      longDescription: "An immersive audio-visual experience that translates music into dynamic 3D environments. Users navigate through soundscapes that react in real-time to audio frequencies.",
-      tags: ["Three.js", "Web Audio API", "GLSL", "React"],
-      image: "/images/projects/sonic-realm.jpg",
-      liveLink: "https://example.com",
-      githubLink: "https://github.com",
+      title: "CFD Python",
+      description: "Computational Fluid Dynamics simulation solving Navier-Stokes equations",
+      longDescription: "A comprehensive implementation of the '12 Steps to Navier-Stokes' in Python using Jupyter Notebooks. This project simulates fluid dynamics by numerically solving the Navier-Stokes equations, visualizing flow patterns, pressure distributions, and turbulence.",
+      tags: ["Python", "Jupyter", "CFD", "Navier-Stokes", "Physics"],
+      image: "/images/projects/cfd.jpg",
+      githubLink: "https://github.com/Helios117/CFDPython",
       featured: true,
     },
     {
       id: "project-4",
-      title: "Chrono Dashboard",
-      description: "Real-time analytics dashboard with fluid data visualization",
-      longDescription: "A sophisticated analytics dashboard that presents complex data through beautiful, animated visualizations. Features include real-time updates, customizable widgets, and exportable reports.",
-      tags: ["React", "D3.js", "Node.js", "PostgreSQL"],
-      image: "/images/projects/chrono-dashboard.jpg",
-      liveLink: "https://example.com",
-      githubLink: "https://github.com",
+      title: "Utkarsh Bank",
+      description: "Full-featured online banking web application",
+      longDescription: "A comprehensive banking web application built with Flask, featuring user authentication, account management, transactions, and a clean, intuitive interface. Demonstrates full-stack development with secure financial transaction handling.",
+      tags: ["Flask", "Python", "HTML/CSS", "Banking", "Full-Stack"],
+      image: "/images/projects/utkarsh-bank.jpg",
+      githubLink: "https://github.com/Helios117/Utkarsh_Bank",
+      featured: true,
     },
     {
       id: "project-5",
-      title: "Mythic Tales",
-      description: "Interactive storytelling platform with branching narratives",
-      longDescription: "A digital storytelling platform that allows users to create and experience interactive narratives. Features include branching storylines, character customization, and collaborative writing tools.",
-      tags: ["Next.js", "MongoDB", "Framer Motion", "Tailwind"],
-      image: "/images/projects/mythic-tales.jpg",
-      liveLink: "https://example.com",
-      githubLink: "https://github.com",
+      title: "Dijkstra Visualizer",
+      description: "Interactive visualization of Dijkstra's shortest path algorithm",
+      longDescription: "An educational tool that brings Dijkstra's algorithm to life through interactive visualization. Watch as the algorithm explores nodes, updates distances, and finds the optimal path in real-time. Built for AlgoVybe with collaborators.",
+      tags: ["TypeScript", "Algorithms", "Visualization", "Graph Theory"],
+      image: "/images/projects/dijkstra.jpg",
+      liveLink: "https://mine-dijkstra-quest-06852.vercel.app",
+      githubLink: "https://github.com/Helios117/Dijkstra-Visual",
     },
     {
       id: "project-6",
-      title: "Void Protocol",
-      description: "Cyberpunk-themed multiplayer game lobby system",
-      longDescription: "A stylized game lobby and matchmaking system with real-time player tracking, team formation, and animated UI transitions inspired by cyberpunk aesthetics.",
-      tags: ["React", "Socket.io", "Three.js", "Redis"],
-      image: "/images/projects/void-protocol.jpg",
-      liveLink: "https://example.com",
-      githubLink: "https://github.com",
+      title: "Flight Planner",
+      description: "Optimal flight routing with graph coloring for runway scheduling",
+      longDescription: "An intelligent flight planning system that uses Dijkstra's algorithm for optimal route finding and graph coloring algorithms for efficient runway scheduling. Demonstrates practical applications of algorithmic thinking in aviation logistics.",
+      tags: ["Python", "Dijkstra", "Graph Coloring", "Optimization"],
+      image: "/images/projects/flight-planner.jpg",
+      githubLink: "https://github.com/Helios117/Flight_Planner",
     },
   ],
 
   contact: {
     heading: "Summon Me",
-    subheading: "Let us craft something legendary together",
-    email: "hello@marblearchive.com",
+    subheading: "Let us forge something legendary together",
+    email: "suraj.vaidyanathan@gmail.com",
     socialLinks: [
-      { platform: "GitHub", url: "https://github.com", icon: "github" },
-      { platform: "LinkedIn", url: "https://linkedin.com", icon: "linkedin" },
-      { platform: "Twitter", url: "https://twitter.com", icon: "twitter" },
-      { platform: "Dribbble", url: "https://dribbble.com", icon: "dribbble" },
+      { platform: "GitHub", url: "https://github.com/Helios117", icon: "github" },
+      { platform: "LinkedIn", url: "https://linkedin.com/in/suraj-vaidyanathan-6bb080356", icon: "linkedin" },
+      { platform: "LeetCode", url: "https://leetcode.com/u/Lord_Helios/", icon: "leetcode" },
     ],
   },
 };

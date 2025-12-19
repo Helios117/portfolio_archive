@@ -216,61 +216,82 @@ function ArtifactScroll({
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-2xl max-h-[85vh] overflow-auto"
       >
-        {/* Scroll paper effect */}
-        <div className="relative bg-gradient-to-b from-[#f5f0e6] via-[#ebe5d8] to-[#e0d9c8] p-8 rounded-sm">
-          {/* Paper texture */}
+        {/* Scroll paper effect - Dark marble theme */}
+        <div className="relative bg-linear-to-b from-[#1f1d1a] via-[#171512] to-[#0f0e0c] p-8 rounded-sm border border-gold-500/20">
+          {/* Marble texture */}
           <div 
-            className="absolute inset-0 opacity-50 mix-blend-multiply pointer-events-none"
+            className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none rounded-sm"
             style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff' surfaceScale='2'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E")`,
             }}
           />
 
           {/* Decorative border */}
-          <div className="absolute inset-4 border-2 border-[#8B7355]/30 rounded-sm pointer-events-none" />
-          <div className="absolute inset-6 border border-[#8B7355]/20 rounded-sm pointer-events-none" />
+          <div className="absolute inset-4 border-2 border-gold-500/20 rounded-sm pointer-events-none" />
+          <div className="absolute inset-6 border border-gold-500/10 rounded-sm pointer-events-none" />
 
           {/* Corner ornaments */}
           {['top-4 left-4', 'top-4 right-4 rotate-90', 'bottom-4 left-4 -rotate-90', 'bottom-4 right-4 rotate-180'].map((pos, i) => (
             <div key={i} className={`absolute ${pos} w-8 h-8`}>
-              <svg viewBox="0 0 32 32" className="w-full h-full text-[#8B7355]/40">
+              <svg viewBox="0 0 32 32" className="w-full h-full text-gold-600/60">
                 <path d="M0 0 L8 0 L8 2 L2 2 L2 8 L0 8 Z" fill="currentColor" />
                 <path d="M4 4 L12 4 L12 6 L6 6 L6 12 L4 12 Z" fill="currentColor" opacity="0.5" />
               </svg>
             </div>
           ))}
 
-          {/* Close button */}
+          {/* Close button - styled to match theme */}
           <button
-            onClick={onClose}
-            className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center
-              bg-[#8B7355]/10 hover:bg-[#8B7355]/20 rounded-full transition-colors"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className="absolute top-4 right-4 z-10 w-12 h-12 flex items-center justify-center
+              bg-gradient-to-br from-[#1a1814] to-[#0f0e0c] rounded-sm
+              border border-gold-500/30 hover:border-gold-500/60
+              shadow-lg hover:shadow-gold-500/20
+              transition-all duration-300 group"
           >
-            <svg className="w-5 h-5 text-[#5D4E37]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            {/* Inner glow effect */}
+            <div className="absolute inset-0.5 bg-gradient-to-br from-gold-500/5 to-transparent rounded-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+            {/* X icon */}
+            <svg 
+              className="w-5 h-5 text-gold-500/70 group-hover:text-gold-400 transition-colors relative z-10" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
+            {/* Corner accents */}
+            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-gold-500/40 group-hover:border-gold-500/70 transition-colors" />
+            <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-gold-500/40 group-hover:border-gold-500/70 transition-colors" />
+            <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-gold-500/40 group-hover:border-gold-500/70 transition-colors" />
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-gold-500/40 group-hover:border-gold-500/70 transition-colors" />
           </button>
 
           {/* Content */}
           <div className="relative">
             {/* Title */}
-            <h2 className="font-cinzel text-3xl text-[#3D3225] mb-2 tracking-wide">
+            <h2 className="font-cinzel text-3xl text-gold-400 mb-2 tracking-wide">
               {project.title}
             </h2>
 
             {/* Decorative line */}
             <div className="flex items-center gap-4 mb-6">
-              <div className="h-0.5 flex-1 bg-gradient-to-r from-[#8B7355] to-transparent" />
+              <div className="h-0.5 flex-1 bg-linear-to-r from-gold-500 to-transparent" />
               <div className="flex gap-1">
-                <div className="w-1.5 h-1.5 bg-[#8B7355] rotate-45" />
-                <div className="w-1.5 h-1.5 bg-[#8B7355]/60 rotate-45" />
-                <div className="w-1.5 h-1.5 bg-[#8B7355]/30 rotate-45" />
+                <div className="w-1.5 h-1.5 bg-gold-500 rotate-45" />
+                <div className="w-1.5 h-1.5 bg-gold-500/60 rotate-45" />
+                <div className="w-1.5 h-1.5 bg-gold-500/30 rotate-45" />
               </div>
-              <div className="h-0.5 flex-1 bg-gradient-to-l from-[#8B7355] to-transparent" />
+              <div className="h-0.5 flex-1 bg-linear-to-l from-gold-500 to-transparent" />
             </div>
 
             {/* Description */}
-            <p className="font-cormorant text-xl text-[#4A4035] leading-relaxed mb-6">
+            <p className="font-cormorant text-xl text-stone-300 leading-relaxed mb-6">
               {project.longDescription || project.description}
             </p>
 
@@ -280,7 +301,7 @@ function ArtifactScroll({
                 <span
                   key={tag}
                   className="px-3 py-1 text-sm font-medium tracking-wider
-                    bg-[#8B7355]/10 text-[#5D4E37] border border-[#8B7355]/30 rounded-sm"
+                    bg-gold-500/10 text-gold-400 border border-gold-500/30 rounded-sm"
                 >
                   {tag}
                 </span>
@@ -294,8 +315,8 @@ function ArtifactScroll({
                   href={project.liveLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 bg-[#3D3225] text-[#f5f0e6]
-                    font-cinzel text-sm tracking-widest hover:bg-[#5D4E37] transition-colors rounded-sm"
+                  className="flex items-center gap-2 px-6 py-3 bg-gold-600 text-[#0a0908]
+                    font-cinzel text-sm tracking-widest hover:bg-gold-500 transition-colors rounded-sm"
                 >
                   <span>VIEW LIVE</span>
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -308,8 +329,8 @@ function ArtifactScroll({
                   href={project.githubLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 border-2 border-[#3D3225] text-[#3D3225]
-                    font-cinzel text-sm tracking-widest hover:bg-[#3D3225] hover:text-[#f5f0e6] transition-colors rounded-sm"
+                  className="flex items-center gap-2 px-6 py-3 border-2 border-gold-500 text-gold-400
+                    font-cinzel text-sm tracking-widest hover:bg-gold-500/10 transition-colors rounded-sm"
                 >
                   <span>SOURCE</span>
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -321,9 +342,9 @@ function ArtifactScroll({
           </div>
         </div>
 
-        {/* Scroll ends decoration */}
-        <div className="absolute -left-3 top-0 bottom-0 w-6 bg-gradient-to-r from-[#8B7355] via-[#a08b6d] to-[#8B7355] rounded-l-full" />
-        <div className="absolute -right-3 top-0 bottom-0 w-6 bg-gradient-to-r from-[#8B7355] via-[#a08b6d] to-[#8B7355] rounded-r-full" />
+        {/* Scroll ends decoration - Gold themed */}
+        <div className="absolute -left-3 top-0 bottom-0 w-6 bg-linear-to-r from-gold-700 via-gold-500 to-gold-700 rounded-l-full shadow-lg" />
+        <div className="absolute -right-3 top-0 bottom-0 w-6 bg-linear-to-r from-gold-700 via-gold-500 to-gold-700 rounded-r-full shadow-lg" />
       </motion.div>
     </motion.div>
   );

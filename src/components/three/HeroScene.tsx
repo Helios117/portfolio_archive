@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useRef, useEffect, useState } from 'react';
+import { Suspense, useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { 
   Environment, 
@@ -18,6 +18,7 @@ import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import DustParticles from './DustParticles';
 import GreekBust, { GreekPillar } from './GreekBust';
+import { useTheme } from '@/context/ThemeContext';
 
 // Animated directional lights
 function AnimatedLights() {
@@ -89,7 +90,7 @@ function AnimatedLights() {
 }
 
 // Background gradient sphere
-function BackgroundSphere() {
+function BackgroundSphere({ isDark = true }: { isDark?: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -103,55 +104,106 @@ function BackgroundSphere() {
       <sphereGeometry args={[1, 64, 64]} />
       <meshBasicMaterial 
         side={THREE.BackSide}
-        color="#0a0908"
+        color={isDark ? '#0a0908' : '#e8e4dc'}
       />
     </mesh>
   );
 }
 
+// Animated marble grid floor
+function MarbleGrid({ isDark = true }: { isDark?: boolean }) {
+  const gridRef = useRef<THREE.Group>(null);
+  
+  useFrame((state) => {
+    if (gridRef.current) {
+      // Subtle wave animation
+      gridRef.current.children.forEach((child, i) => {
+        const mesh = child as THREE.Mesh;
+        const x = Math.floor(i / 11) - 5;
+        const z = (i % 11) - 5;
+        const time = state.clock.getElapsedTime();
+        mesh.position.y = Math.sin(time * 0.5 + x * 0.5 + z * 0.5) * 0.02 - 1.5;
+      });
+    }
+  });
+  
+  const tileMaterial = useMemo(() => new THREE.MeshStandardMaterial({
+    color: isDark ? '#1a1816' : '#e8e4dc',
+    roughness: 0.4,
+    metalness: 0.1,
+  }), [isDark]);
+  
+  const goldLineMaterial = useMemo(() => new THREE.MeshStandardMaterial({
+    color: '#D4AF37',
+    roughness: 0.3,
+    metalness: 0.6,
+    emissive: '#D4AF37',
+    emissiveIntensity: 0.1,
+  }), []);
+  
+  return (
+    <group ref={gridRef}>
+      {/* Create a 11x11 grid of tiles */}
+      {[...Array(121)].map((_, i) => {
+        const x = (Math.floor(i / 11) - 5) * 0.8;
+        const z = ((i % 11) - 5) * 0.8;
+        return (
+          <group key={i} position={[x, -1.5, z]}>
+            <mesh material={tileMaterial}>
+              <boxGeometry args={[0.75, 0.05, 0.75]} />
+            </mesh>
+            {/* Gold edge lines */}
+            <mesh position={[0.375, 0.03, 0]} material={goldLineMaterial}>
+              <boxGeometry args={[0.02, 0.02, 0.75]} />
+            </mesh>
+            <mesh position={[0, 0.03, 0.375]} material={goldLineMaterial}>
+              <boxGeometry args={[0.75, 0.02, 0.02]} />
+            </mesh>
+          </group>
+        );
+      })}
+    </group>
+  );
+}
+
 // Main scene content
-function SceneContent() {
+function SceneContent({ isDark = true }: { isDark?: boolean }) {
   return (
     <>
-      <BackgroundSphere />
+      <BackgroundSphere isDark={isDark} />
       <AnimatedLights />
       
-      {/* Main centerpiece - Greek Bust */}
-      <GreekBust scale={1.2} />
+      {/* Main centerpiece - Helios Bust - shifted down */}
+      <group position={[0, -0.5, 0]}>
+        <GreekBust scale={1.2} />
+      </group>
       
-      {/* Decorative pillars in background */}
-      <GreekPillar scale={0.4} position={[-4, -2, -3]} />
-      <GreekPillar scale={0.35} position={[4.5, -2.5, -4]} />
+      {/* Decorative pillars - larger and more prominent at sides */}
+      <GreekPillar scale={0.7} position={[-3, -0.8, -1]} />
+      <GreekPillar scale={0.7} position={[3, -0.8, -1]} />
+      
+      {/* Animated marble grid floor */}
+      <MarbleGrid isDark={isDark} />
       
       {/* Dust particles for atmosphere */}
-      <DustParticles count={600} size={0.02} color="#D4AF37" />
+      <DustParticles count={400} size={0.015} color="#D4AF37" />
       
-      {/* Sparkles for magical effect */}
+      {/* Subtle sparkles */}
       <Sparkles
-        count={100}
-        scale={15}
-        size={2}
-        speed={0.3}
-        color="#D4AF37"
-        opacity={0.5}
-      />
-      
-      {/* Additional warm sparkles */}
-      <Sparkles
-        count={50}
-        scale={10}
-        size={3}
+        count={60}
+        scale={12}
+        size={1.5}
         speed={0.2}
-        color="#FFD700"
-        opacity={0.3}
+        color="#D4AF37"
+        opacity={0.4}
       />
       
       {/* Contact shadows for grounding */}
       <ContactShadows
         position={[0, -1.5, 0]}
-        opacity={0.4}
-        scale={10}
-        blur={2.5}
+        opacity={0.3}
+        scale={8}
+        blur={2}
         far={4}
         color="#1a1a1a"
       />
@@ -212,6 +264,8 @@ interface HeroSceneProps {
 
 export default function HeroScene({ className = '' }: HeroSceneProps) {
   const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     setMounted(true);
@@ -240,17 +294,17 @@ export default function HeroScene({ className = '' }: HeroSceneProps) {
           far={100}
         />
         
-        <color attach="background" args={['#0a0908']} />
-        <fog attach="fog" args={['#0a0908', 8, 30]} />
+        <color attach="background" args={[isDark ? '#0a0908' : '#e8e4dc']} />
+        <fog attach="fog" args={[isDark ? '#0a0908' : '#e8e4dc', 8, 30]} />
         
         <Suspense fallback={null}>
-          <SceneContent />
+          <SceneContent isDark={isDark} />
           <CameraController />
           
           {/* Post-processing effects */}
           <EffectComposer>
             <Bloom
-              intensity={0.8}
+              intensity={isDark ? 0.8 : 0.5}
               luminanceThreshold={0.6}
               luminanceSmoothing={0.9}
               mipmapBlur
@@ -258,7 +312,7 @@ export default function HeroScene({ className = '' }: HeroSceneProps) {
             <Vignette
               eskil={false}
               offset={0.1}
-              darkness={0.8}
+              darkness={isDark ? 0.8 : 0.4}
               blendFunction={BlendFunction.NORMAL}
             />
             <ChromaticAberration

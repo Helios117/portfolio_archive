@@ -44,16 +44,29 @@ export default function Footer() {
                     <stop offset="100%" stopColor="#D4AF37" />
                   </linearGradient>
                 </defs>
-                <path
-                  d="M5 5 L35 5 L35 15 L15 15 L15 25 L35 25 L35 35 L5 35 L5 25 L25 25 L25 15 L5 15 Z"
-                  fill="none"
-                  stroke="url(#footerGoldGradient)"
-                  strokeWidth="1.5"
-                />
+                {/* Sun circle */}
+                <circle cx="20" cy="20" r="6" fill="url(#footerGoldGradient)" />
+                {/* Sun rays */}
+                {[...Array(12)].map((_, i) => {
+                  const angle = (i * 30) * (Math.PI / 180);
+                  const x1 = 20 + Math.cos(angle) * 9;
+                  const y1 = 20 + Math.sin(angle) * 9;
+                  const x2 = 20 + Math.cos(angle) * 15;
+                  const y2 = 20 + Math.sin(angle) * 15;
+                  return (
+                    <line 
+                      key={i}
+                      x1={x1} y1={y1} x2={x2} y2={y2}
+                      stroke="url(#footerGoldGradient)"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  );
+                })}
               </svg>
             </div>
             <span className="font-cinzel text-lg tracking-wider text-stone-300">
-              The Marble Archive
+              Helios Archive
             </span>
           </motion.div>
 

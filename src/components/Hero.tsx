@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import content from '@/data/content';
+import { useTheme } from '@/context/ThemeContext';
 
 // Dynamic import for 3D scene to avoid SSR issues
 const HeroScene = dynamic(() => import('./three/HeroScene'), {
@@ -22,6 +23,7 @@ const HeroScene = dynamic(() => import('./three/HeroScene'), {
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
@@ -67,7 +69,8 @@ export default function Hero() {
             <span className="block text-gold-gradient">
               {content.hero.title.split(' ')[0]}
             </span>
-            <span className="block text-stone-200 text-3xl md:text-4xl lg:text-5xl mt-2 tracking-[0.3em]">
+            <span className={`block text-3xl md:text-4xl lg:text-5xl mt-2 tracking-[0.3em] transition-colors duration-500
+              ${theme === 'dark' ? 'text-stone-200' : 'text-stone-700'}`}>
               {content.hero.title.split(' ').slice(1).join(' ')}
             </span>
           </h1>
@@ -87,7 +90,8 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.2 }}
-            className="font-cormorant text-xl md:text-2xl text-stone-400 max-w-2xl mx-auto leading-relaxed italic"
+            className={`font-cormorant text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed italic transition-colors duration-500
+              ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}
           >
             {content.hero.subtitle}
           </motion.p>
@@ -125,7 +129,12 @@ export default function Hero() {
       </motion.div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0908] to-transparent z-20 pointer-events-none" />
+      <div className={`absolute bottom-0 left-0 right-0 h-32 z-20 pointer-events-none transition-colors duration-500
+        ${theme === 'dark' 
+          ? 'bg-linear-to-t from-[#0a0908] to-transparent' 
+          : 'bg-linear-to-t from-[#f5f5f0] to-transparent'
+        }`} 
+      />
     </section>
   );
 }

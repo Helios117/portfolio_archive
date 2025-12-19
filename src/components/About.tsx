@@ -128,24 +128,39 @@ export default function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              <h3 className="font-cinzel text-lg text-gold-500 tracking-widest mb-6 text-center">
+              <h3 className="font-cinzel text-lg text-gold-500 tracking-widest mb-8 text-center">
                 SACRED ARTS
               </h3>
-              <div className="flex flex-wrap justify-center gap-3">
-                {content.about.skills.map((skill, index) => (
-                  <motion.span
-                    key={skill}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+              <div className="space-y-6">
+                {content.about.skillCategories.map((category, categoryIndex) => (
+                  <motion.div
+                    key={category.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 0.6 + index * 0.05 }}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    className="px-4 py-2 bg-gold-500/10 border border-gold-500/20 rounded-sm
-                      font-cinzel text-sm tracking-wider text-stone-300
-                      hover:bg-gold-500/20 hover:border-gold-500/40 transition-all cursor-default"
+                    transition={{ duration: 0.5, delay: 0.6 + categoryIndex * 0.1 }}
                   >
-                    {skill}
-                  </motion.span>
+                    <h4 className="font-cinzel text-sm text-amber-400/80 tracking-wider mb-3 text-center uppercase">
+                      {category.name}
+                    </h4>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {category.skills.map((skill, skillIndex) => (
+                        <motion.span
+                          key={skill}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: 0.7 + categoryIndex * 0.1 + skillIndex * 0.03 }}
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          className="px-3 py-1.5 bg-gold-500/10 border border-gold-500/20 rounded-sm
+                            font-cinzel text-xs tracking-wider text-stone-300
+                            hover:bg-gold-500/20 hover:border-gold-500/40 transition-all cursor-default"
+                        >
+                          {skill}
+                        </motion.span>
+                      ))}
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>

@@ -3,6 +3,8 @@
 import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import content, { NavLink } from '@/data/content';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '@/context/ThemeContext';
 
 interface MarbleNavProps {
   className?: string;
@@ -152,6 +154,7 @@ function NavTablet({
 export default function MarbleNav({ className = '' }: MarbleNavProps) {
   const [activeId, setActiveId] = useState('home');
   const navRef = useRef<HTMLElement>(null);
+  const { theme } = useTheme();
 
   return (
     <motion.nav
@@ -162,7 +165,12 @@ export default function MarbleNav({ className = '' }: MarbleNavProps) {
       className={`fixed top-0 left-0 right-0 z-50 ${className}`}
     >
       {/* Gradient overlay for blending with scene */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0908] via-[#0a0908]/80 to-transparent pointer-events-none" />
+      <div className={`absolute inset-0 pointer-events-none transition-colors duration-500
+        ${theme === 'dark' 
+          ? 'bg-linear-to-b from-[#0a0908] via-[#0a0908]/80 to-transparent' 
+          : 'bg-linear-to-b from-[#f5f5f0] via-[#f5f5f0]/80 to-transparent'
+        }`} 
+      />
       
       <div className="relative max-w-6xl mx-auto px-6 py-6">
         <div className="flex items-center justify-between">
@@ -173,7 +181,7 @@ export default function MarbleNav({ className = '' }: MarbleNavProps) {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="flex items-center gap-3"
           >
-            {/* Greek key pattern / logo mark */}
+            {/* Helios Sun Logo */}
             <div className="w-10 h-10 relative">
               <svg viewBox="0 0 40 40" className="w-full h-full">
                 <defs>
@@ -182,18 +190,38 @@ export default function MarbleNav({ className = '' }: MarbleNavProps) {
                     <stop offset="50%" stopColor="#FFD700" />
                     <stop offset="100%" stopColor="#D4AF37" />
                   </linearGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
                 </defs>
-                {/* Stylized Greek meander/key pattern */}
-                <path
-                  d="M5 5 L35 5 L35 15 L15 15 L15 25 L35 25 L35 35 L5 35 L5 25 L25 25 L25 15 L5 15 Z"
-                  fill="none"
-                  stroke="url(#goldGradient)"
-                  strokeWidth="2"
-                />
+                {/* Sun circle */}
+                <circle cx="20" cy="20" r="8" fill="url(#goldGradient)" filter="url(#glow)" />
+                {/* Sun rays */}
+                {[...Array(12)].map((_, i) => {
+                  const angle = (i * 30) * (Math.PI / 180);
+                  const x1 = 20 + Math.cos(angle) * 11;
+                  const y1 = 20 + Math.sin(angle) * 11;
+                  const x2 = 20 + Math.cos(angle) * 17;
+                  const y2 = 20 + Math.sin(angle) * 17;
+                  return (
+                    <line 
+                      key={i}
+                      x1={x1} y1={y1} x2={x2} y2={y2}
+                      stroke="url(#goldGradient)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  );
+                })}
               </svg>
             </div>
-            <span className="font-cinzel text-xl tracking-wider text-stone-200">
-              Archive
+            <span className={`font-cinzel text-xl tracking-wider transition-colors duration-500
+              ${theme === 'dark' ? 'text-stone-200' : 'text-stone-800'}`}>
+              Helios
             </span>
           </motion.div>
 
@@ -208,6 +236,16 @@ export default function MarbleNav({ className = '' }: MarbleNavProps) {
                 onClick={() => setActiveId(link.id)}
               />
             ))}
+            
+            {/* Theme Toggle */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="ml-4"
+            >
+              <ThemeToggle />
+            </motion.div>
           </div>
         </div>
       </div>

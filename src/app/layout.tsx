@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cinzel, Cormorant_Garamond } from "next/font/google";
+import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
 const cinzel = Cinzel({
@@ -16,13 +17,13 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "The Marble Archive | Portfolio",
-  description: "A curated collection of digital artifacts and creative works. Where code becomes art and digital dreams take form.",
-  keywords: ["portfolio", "developer", "creative", "3D", "web development", "react", "three.js"],
-  authors: [{ name: "Your Name" }],
+  title: "The Marble Archive | Suraj Vaidyanathan",
+  description: "Helios - A curated collection of digital artifacts and creative works. Where code becomes art and digital dreams take form.",
+  keywords: ["portfolio", "developer", "creative", "3D", "web development", "react", "three.js", "Suraj Vaidyanathan", "Helios"],
+  authors: [{ name: "Suraj Vaidyanathan" }],
   openGraph: {
-    title: "The Marble Archive | Portfolio",
-    description: "A curated collection of digital artifacts and creative works",
+    title: "The Marble Archive | Suraj Vaidyanathan",
+    description: "Helios - A curated collection of digital artifacts and creative works",
     type: "website",
   },
 };
@@ -33,11 +34,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${cinzel.variable} ${cormorant.variable} antialiased bg-[#0a0908] text-stone-100`}
+        className={`${cinzel.variable} ${cormorant.variable} antialiased bg-[#0a0908] text-stone-100 transition-colors duration-500`}
       >
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
