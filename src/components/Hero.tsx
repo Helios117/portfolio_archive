@@ -72,7 +72,7 @@ export default function Hero() {
             <span className={`block text-3xl md:text-4xl lg:text-5xl mt-2 tracking-[0.3em] transition-colors duration-500
               ${theme === 'dark' 
                 ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' 
-                : 'text-stone-900 drop-shadow-[0_1px_3px_rgba(255,255,255,0.9)]'}`}>
+                : 'text-[#1a1815]'}`}>
               {content.hero.title.split(' ').slice(1).join(' ')}
             </span>
           </h1>
@@ -88,17 +88,27 @@ export default function Hero() {
           </div>
 
           {/* Subtitle */}
-          <motion.p
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.2 }}
-            className={`font-cormorant text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed italic transition-colors duration-500
+            className="relative max-w-2xl mx-auto"
+          >
+            {/* Gradient diffusion background for light mode */}
+            {theme !== 'dark' && (
+              <div 
+                className="absolute -inset-x-16 -inset-y-8 rounded-full blur-2xl"
+                style={{ background: 'radial-gradient(ellipse at center, rgba(255,253,248,0.95) 0%, rgba(255,253,248,0.7) 40%, rgba(255,253,248,0) 70%)' }}
+              />
+            )}
+            <p className={`relative font-cormorant text-xl md:text-2xl leading-relaxed italic transition-colors duration-500
               ${theme === 'dark' 
                 ? 'text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]' 
-                : 'text-amber-800 drop-shadow-[0_1px_1px_rgba(255,255,255,0.5)]'}`}
-          >
-            {content.hero.subtitle}
-          </motion.p>
+                : 'text-[#1a1815] drop-shadow-[0_0_20px_rgba(255,253,248,1)]'}`}
+            >
+              {content.hero.subtitle}
+            </p>
+          </motion.div>
         </motion.div>
 
         {/* Scroll indicator */}
@@ -114,23 +124,30 @@ export default function Hero() {
               e.preventDefault();
               document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="flex flex-col items-center gap-3 group cursor-pointer"
+            className="relative flex flex-col items-center gap-3 group cursor-pointer"
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <span className={`font-cinzel text-xs tracking-[0.3em] transition-colors
+            {/* Gradient diffusion background for light mode */}
+            {theme !== 'dark' && (
+              <div 
+                className="absolute -inset-x-10 -inset-y-6 rounded-full blur-xl"
+                style={{ background: 'radial-gradient(ellipse at center, rgba(255,253,248,0.98) 0%, rgba(255,253,248,0.6) 50%, rgba(255,253,248,0) 80%)' }}
+              />
+            )}
+            <span className={`relative font-cinzel text-xs tracking-[0.3em] transition-colors
               ${theme === 'dark' 
                 ? 'text-gold-500 group-hover:text-gold-400' 
-                : 'text-amber-700 group-hover:text-amber-600'}`}>
+                : 'text-[#1a1815] font-semibold group-hover:text-[#0d0a07] drop-shadow-[0_0_15px_rgba(255,253,248,1)]'}`}>
               {content.hero.scrollText}
             </span>
-            <div className={`w-6 h-10 border-2 rounded-full p-1 transition-colors
+            <div className={`relative w-6 h-10 border-2 rounded-full p-1 transition-colors
               ${theme === 'dark' 
                 ? 'border-gold-500/50 group-hover:border-gold-500' 
-                : 'border-amber-600/50 group-hover:border-amber-600'}`}>
+                : 'border-[#1a1815] group-hover:border-[#0d0a07]'}`}>
               <motion.div
                 className={`w-1.5 h-1.5 rounded-full mx-auto
-                  ${theme === 'dark' ? 'bg-gold-500' : 'bg-amber-600'}`}
+                  ${theme === 'dark' ? 'bg-gold-500' : 'bg-[#1a1815]'}`}
                 animate={{ y: [0, 16, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
               />
@@ -139,11 +156,11 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Bottom gradient fade */}
-      <div className={`absolute bottom-0 left-0 right-0 h-32 z-20 pointer-events-none transition-colors duration-500
+      {/* Bottom gradient fade - smooth diffusion */}
+      <div className={`absolute bottom-0 left-0 right-0 h-48 z-20 pointer-events-none transition-colors duration-500
         ${theme === 'dark' 
-          ? 'bg-linear-to-t from-[#0a0908] to-transparent' 
-          : 'bg-linear-to-t from-[#fffdf8] to-transparent'
+          ? 'bg-linear-to-t from-[#0a0908] via-[#0a0908]/60 to-transparent' 
+          : 'bg-linear-to-t from-[#fffdf8] via-[#fffdf8]/40 to-transparent'
         }`} 
       />
     </section>

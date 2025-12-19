@@ -21,7 +21,7 @@ import GreekBust, { GreekPillar } from './GreekBust';
 import { useTheme } from '@/context/ThemeContext';
 
 // Animated directional lights
-function AnimatedLights() {
+function AnimatedLights({ isDark = true }: { isDark?: boolean }) {
   const spotLight1 = useRef<THREE.SpotLight>(null);
   const spotLight2 = useRef<THREE.SpotLight>(null);
   const pointLight = useRef<THREE.PointLight>(null);
@@ -35,7 +35,7 @@ function AnimatedLights() {
     }
     
     if (pointLight.current) {
-      pointLight.current.intensity = 0.5 + Math.sin(time * 2) * 0.2;
+      pointLight.current.intensity = (isDark ? 0.5 : 0.6) + Math.sin(time * 2) * 0.2;
     }
   });
 
@@ -47,8 +47,8 @@ function AnimatedLights() {
         position={[5, 8, 3]}
         angle={0.4}
         penumbra={0.8}
-        intensity={2}
-        color="#FFD700"
+        intensity={isDark ? 2 : 2.5}
+        color={isDark ? "#FFD700" : "#D4AF37"}
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0001}
@@ -60,8 +60,8 @@ function AnimatedLights() {
         position={[-5, 5, -3]}
         angle={0.5}
         penumbra={1}
-        intensity={0.8}
-        color="#E6D5AC"
+        intensity={isDark ? 0.8 : 1.5}
+        color={isDark ? "#E6D5AC" : "#C9A962"}
       />
       
       {/* Rim light for dramatic effect */}
@@ -69,18 +69,32 @@ function AnimatedLights() {
         position={[0, 5, -6]}
         angle={0.6}
         penumbra={0.5}
-        intensity={1.2}
-        color="#FFF8DC"
+        intensity={isDark ? 1.2 : 1.8}
+        color={isDark ? "#FFF8DC" : "#E6D5AC"}
       />
 
-      {/* Ambient glow */}
-      <ambientLight intensity={0.15} color="#FFF5E6" />
+      {/* Front key light - balanced for light mode */}
+      <directionalLight
+        position={[0, 3, 5]}
+        intensity={isDark ? 0.3 : 1.2}
+        color={isDark ? "#FFF5E6" : "#FFF8F0"}
+      />
+
+      {/* Ambient glow - moderate for light mode */}
+      <ambientLight intensity={isDark ? 0.15 : 0.4} color={isDark ? "#FFF5E6" : "#FFF8F0"} />
+
+      {/* Hemisphere light for natural fill */}
+      <hemisphereLight 
+        color={isDark ? "#FFF8DC" : "#FFFAF5"}
+        groundColor={isDark ? "#1a1816" : "#d4c4a8"}
+        intensity={isDark ? 0.3 : 0.6}
+      />
 
       {/* Floating point light for ethereal effect */}
       <pointLight
         ref={pointLight}
         position={[0, 3, 2]}
-        intensity={0.5}
+        intensity={isDark ? 0.5 : 0.8}
         color="#D4AF37"
         distance={10}
         decay={2}
@@ -128,9 +142,9 @@ function MarbleGrid({ isDark = true }: { isDark?: boolean }) {
   });
   
   const tileMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: isDark ? '#1a1816' : '#e8e4dc',
-    roughness: 0.4,
-    metalness: 0.1,
+    color: isDark ? '#1a1816' : '#d9ccb8',
+    roughness: isDark ? 0.4 : 0.5,
+    metalness: isDark ? 0.1 : 0.08,
   }), [isDark]);
   
   const goldLineMaterial = useMemo(() => new THREE.MeshStandardMaterial({
@@ -171,16 +185,16 @@ function SceneContent({ isDark = true }: { isDark?: boolean }) {
   return (
     <>
       <BackgroundSphere isDark={isDark} />
-      <AnimatedLights />
+      <AnimatedLights isDark={isDark} />
       
       {/* Main centerpiece - Helios Bust - shifted down */}
       <group position={[0, -0.5, 0]}>
-        <GreekBust scale={1.2} />
+        <GreekBust scale={1.2} isDark={isDark} />
       </group>
       
       {/* Decorative pillars - larger and more prominent at sides */}
-      <GreekPillar scale={0.7} position={[-3, -0.8, -1]} />
-      <GreekPillar scale={0.7} position={[3, -0.8, -1]} />
+      <GreekPillar scale={0.7} position={[-3, -0.8, -1]} isDark={isDark} />
+      <GreekPillar scale={0.7} position={[3, -0.8, -1]} isDark={isDark} />
       
       {/* Animated marble grid floor */}
       <MarbleGrid isDark={isDark} />

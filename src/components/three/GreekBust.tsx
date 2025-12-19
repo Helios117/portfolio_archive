@@ -19,10 +19,10 @@ export function GreekBust({ scale = 1, isDark = true }: HeliosBustProps) {
   // Create marble-like material
   const marbleMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
-      color: isDark ? '#f5f5f0' : '#e8e4dc',
-      roughness: 0.3,
-      metalness: 0.1,
-      envMapIntensity: 0.8,
+      color: isDark ? '#f5f5f0' : '#e8dcc8',
+      roughness: isDark ? 0.3 : 0.35,
+      metalness: isDark ? 0.1 : 0.15,
+      envMapIntensity: isDark ? 0.8 : 1.0,
     });
   }, [isDark]);
 
@@ -33,7 +33,7 @@ export function GreekBust({ scale = 1, isDark = true }: HeliosBustProps) {
       roughness: 0.15,
       metalness: 0.95,
       emissive: '#FF8C00',
-      emissiveIntensity: isDark ? 0.4 : 0.2,
+      emissiveIntensity: isDark ? 0.4 : 0.5,
     });
   }, [isDark]);
 
@@ -44,7 +44,7 @@ export function GreekBust({ scale = 1, isDark = true }: HeliosBustProps) {
       roughness: 0.1,
       metalness: 0.8,
       emissive: '#FF4500',
-      emissiveIntensity: isDark ? 0.6 : 0.3,
+      emissiveIntensity: isDark ? 0.6 : 0.7,
       transparent: true,
       opacity: 0.9,
     });
@@ -262,9 +262,9 @@ export function GreekPillar({ scale = 1, position = [0, 0, 0] as [number, number
 
   const marbleMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
-      color: isDark ? '#f0ebe3' : '#d9d5cd',
-      roughness: 0.4,
-      metalness: 0.05,
+      color: isDark ? '#f0ebe3' : '#ddd0bc',
+      roughness: isDark ? 0.4 : 0.4,
+      metalness: isDark ? 0.05 : 0.1,
     });
   }, [isDark]);
 
@@ -274,7 +274,7 @@ export function GreekPillar({ scale = 1, position = [0, 0, 0] as [number, number
       roughness: 0.3,
       metalness: 0.7,
       emissive: '#D4AF37',
-      emissiveIntensity: isDark ? 0.1 : 0.05,
+      emissiveIntensity: isDark ? 0.1 : 0.15,
     });
   }, [isDark]);
 
