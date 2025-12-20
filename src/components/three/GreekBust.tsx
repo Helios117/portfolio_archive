@@ -26,7 +26,7 @@ export function GreekBust({ scale = 1, isDark = true }: HeliosBustProps) {
     });
   }, [isDark]);
 
-  // Create gold accent material - more radiant for Helios
+  // Create gold accent material
   const goldMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
       color: '#FFD700',
@@ -34,19 +34,6 @@ export function GreekBust({ scale = 1, isDark = true }: HeliosBustProps) {
       metalness: 0.95,
       emissive: '#FF8C00',
       emissiveIntensity: isDark ? 0.4 : 0.5,
-    });
-  }, [isDark]);
-
-  // Glowing sun material for the crown rays
-  const sunGlowMaterial = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
-      color: '#FFA500',
-      roughness: 0.1,
-      metalness: 0.8,
-      emissive: '#FF4500',
-      emissiveIntensity: isDark ? 0.6 : 0.7,
-      transparent: true,
-      opacity: 0.9,
     });
   }, [isDark]);
 
@@ -74,9 +61,9 @@ export function GreekBust({ scale = 1, isDark = true }: HeliosBustProps) {
       0.05
     );
 
-    // Animate crown rays
+    // Slow rotate crown rays
     if (crownRef.current) {
-      crownRef.current.rotation.z = time * 0.3;
+      crownRef.current.rotation.z = time * 0.15;
     }
   });
 
@@ -87,170 +74,106 @@ export function GreekBust({ scale = 1, isDark = true }: HeliosBustProps) {
       floatIntensity={0.4}
     >
       <group ref={groupRef} scale={scale}>
-        {/* Head - Main sphere with more defined features */}
-        <mesh position={[0, 1.8, 0]} material={marbleMaterial}>
-          <sphereGeometry args={[0.52, 64, 64]} />
+        
+        {/* === SIMPLE SPHERE HEAD === */}
+        <mesh position={[0, 1.7, 0]} material={marbleMaterial}>
+          <sphereGeometry args={[0.5, 64, 64]} />
         </mesh>
 
-        {/* Forehead - slightly prominent */}
-        <mesh position={[0, 2.0, 0.25]} material={marbleMaterial}>
-          <sphereGeometry args={[0.35, 32, 32]} />
-        </mesh>
-
-        {/* Face features - Noble Nose */}
-        <mesh position={[0, 1.75, 0.48]} rotation={[0.3, 0, 0]} material={marbleMaterial}>
-          <coneGeometry args={[0.07, 0.28, 4]} />
-        </mesh>
-
-        {/* Nose bridge */}
-        <mesh position={[0, 1.85, 0.42]} rotation={[0.2, 0, 0]} material={marbleMaterial}>
-          <boxGeometry args={[0.06, 0.15, 0.1]} />
-        </mesh>
-
-        {/* Brow ridge - more defined */}
-        <mesh position={[0, 1.98, 0.38]} rotation={[0.4, 0, 0]} material={marbleMaterial}>
-          <boxGeometry args={[0.4, 0.08, 0.12]} />
-        </mesh>
-
-        {/* Eye sockets - deeper set */}
-        <mesh position={[-0.16, 1.88, 0.4]} material={marbleMaterial}>
-          <sphereGeometry args={[0.08, 16, 16]} />
-        </mesh>
-        <mesh position={[0.16, 1.88, 0.4]} material={marbleMaterial}>
-          <sphereGeometry args={[0.08, 16, 16]} />
-        </mesh>
-
-        {/* Cheekbones */}
-        <mesh position={[-0.28, 1.7, 0.28]} material={marbleMaterial}>
-          <sphereGeometry args={[0.12, 16, 16]} />
-        </mesh>
-        <mesh position={[0.28, 1.7, 0.28]} material={marbleMaterial}>
-          <sphereGeometry args={[0.12, 16, 16]} />
-        </mesh>
-
-        {/* Lips */}
-        <mesh position={[0, 1.58, 0.44]} rotation={[0.1, 0, 0]} material={marbleMaterial}>
-          <capsuleGeometry args={[0.035, 0.1, 4, 8]} />
-        </mesh>
-
-        {/* Chin - strong */}
-        <mesh position={[0, 1.42, 0.32]} material={marbleMaterial}>
-          <sphereGeometry args={[0.16, 32, 32]} />
-        </mesh>
-
-        {/* Jaw line */}
-        <mesh position={[-0.2, 1.5, 0.2]} rotation={[0, 0.3, 0]} material={marbleMaterial}>
-          <boxGeometry args={[0.15, 0.1, 0.2]} />
-        </mesh>
-        <mesh position={[0.2, 1.5, 0.2]} rotation={[0, -0.3, 0]} material={marbleMaterial}>
-          <boxGeometry args={[0.15, 0.1, 0.2]} />
-        </mesh>
-
-        {/* Neck - strong */}
+        {/* === NECK === */}
         <mesh position={[0, 1.05, 0]} material={marbleMaterial}>
-          <cylinderGeometry args={[0.22, 0.28, 0.55, 32]} />
+          <cylinderGeometry args={[0.18, 0.24, 0.5, 32]} />
         </mesh>
 
-        {/* Shoulders/Chest base */}
-        <mesh position={[0, 0.65, 0]} material={marbleMaterial}>
-          <cylinderGeometry args={[0.55, 0.65, 0.45, 32]} />
+        {/* === SHOULDERS/CHEST === */}
+        <mesh position={[0, 0.7, 0]} material={marbleMaterial}>
+          <cylinderGeometry args={[0.45, 0.52, 0.4, 32]} />
         </mesh>
 
-        {/* Shoulder definition */}
-        <mesh position={[-0.4, 0.7, 0]} rotation={[0, 0, 0.3]} material={marbleMaterial}>
-          <sphereGeometry args={[0.2, 16, 16]} />
+        {/* Shoulder curves */}
+        <mesh position={[-0.32, 0.75, 0]} rotation={[0, 0, 0.4]} material={marbleMaterial}>
+          <sphereGeometry args={[0.14, 16, 16]} />
         </mesh>
-        <mesh position={[0.4, 0.7, 0]} rotation={[0, 0, -0.3]} material={marbleMaterial}>
-          <sphereGeometry args={[0.2, 16, 16]} />
-        </mesh>
-
-        {/* Pedestal top */}
-        <mesh position={[0, 0.3, 0]} material={marbleMaterial}>
-          <cylinderGeometry args={[0.58, 0.65, 0.25, 32]} />
+        <mesh position={[0.32, 0.75, 0]} rotation={[0, 0, -0.4]} material={marbleMaterial}>
+          <sphereGeometry args={[0.14, 16, 16]} />
         </mesh>
 
-        {/* Pedestal middle with decorative groove */}
-        <mesh position={[0, 0.05, 0]} material={marbleMaterial}>
-          <cylinderGeometry args={[0.5, 0.55, 0.25, 32]} />
+        {/* === PEDESTAL === */}
+        <mesh position={[0, 0.4, 0]} material={marbleMaterial}>
+          <cylinderGeometry args={[0.48, 0.52, 0.2, 32]} />
         </mesh>
 
-        {/* Pedestal base */}
-        <mesh position={[0, -0.2, 0]} material={marbleMaterial}>
-          <cylinderGeometry args={[0.62, 0.7, 0.25, 32]} />
+        <mesh position={[0, 0.2, 0]} material={marbleMaterial}>
+          <cylinderGeometry args={[0.44, 0.46, 0.2, 32]} />
         </mesh>
 
-        {/* === HELIOS SUN CROWN === */}
-        <group ref={crownRef} position={[0, 2.35, 0]}>
-          {/* Central sun disc */}
+        <mesh position={[0, 0, 0]} material={marbleMaterial}>
+          <cylinderGeometry args={[0.5, 0.56, 0.2, 32]} />
+        </mesh>
+
+        {/* === SUN CROWN WITH RAYS === */}
+        <group ref={crownRef} position={[0, 2.4, 0]}>
+          
+          {/* Central sun disc - front and back */}
           <mesh material={goldMaterial}>
-            <sphereGeometry args={[0.12, 32, 32]} />
+            <circleGeometry args={[0.15, 32]} />
+          </mesh>
+          <mesh rotation={[0, Math.PI, 0]} material={goldMaterial}>
+            <circleGeometry args={[0.15, 32]} />
+          </mesh>
+          
+          {/* Sun disc rim */}
+          <mesh material={goldMaterial}>
+            <torusGeometry args={[0.15, 0.02, 16, 32]} />
           </mesh>
 
-          {/* Main radiant rays - 12 rays like clock positions */}
+          {/* 12 sun rays emanating from disc */}
           {[...Array(12)].map((_, i) => {
             const angle = (i / 12) * Math.PI * 2;
-            const rayLength = i % 2 === 0 ? 0.35 : 0.25; // Alternating lengths
-            const rayWidth = i % 2 === 0 ? 0.025 : 0.018;
+            const rayLength = 0.22;
             
             return (
-              <group key={`ray-${i}`} rotation={[0, 0, angle]}>
-                <mesh 
-                  position={[0, rayLength / 2 + 0.12, 0]}
-                  material={i % 2 === 0 ? sunGlowMaterial : goldMaterial}
-                >
-                  <boxGeometry args={[rayWidth, rayLength, 0.015]} />
-                </mesh>
-                {/* Ray tip - pointed */}
-                <mesh 
-                  position={[0, rayLength + 0.12, 0]}
-                  rotation={[0, 0, Math.PI]}
-                  material={sunGlowMaterial}
-                >
-                  <coneGeometry args={[rayWidth * 1.5, 0.06, 4]} />
-                </mesh>
-              </group>
+              <mesh
+                key={`ray-${i}`}
+                position={[
+                  Math.cos(angle) * (0.15 + rayLength / 2 + 0.02),
+                  Math.sin(angle) * (0.15 + rayLength / 2 + 0.02),
+                  0
+                ]}
+                rotation={[0, 0, angle + Math.PI / 2]}
+                material={goldMaterial}
+              >
+                <coneGeometry args={[0.025, rayLength, 8]} />
+              </mesh>
             );
           })}
-
-          {/* Inner glow ring */}
-          <mesh material={goldMaterial}>
-            <torusGeometry args={[0.15, 0.02, 8, 32]} />
-          </mesh>
         </group>
 
-        {/* Hair - simplified curly Greek style (removed separate spheres, using smoother mesh) */}
-        <mesh position={[0, 2.0, -0.15]} material={marbleMaterial}>
-          <sphereGeometry args={[0.45, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.6]} />
-        </mesh>
-        
-        {/* Side hair */}
-        <mesh position={[-0.35, 1.8, 0]} material={marbleMaterial}>
-          <sphereGeometry args={[0.18, 16, 16]} />
-        </mesh>
-        <mesh position={[0.35, 1.8, 0]} material={marbleMaterial}>
-          <sphereGeometry args={[0.18, 16, 16]} />
-        </mesh>
-
-        {/* Decorative sun emblem on chest */}
-        <group position={[0, 0.55, 0.55]} rotation={[Math.PI * 0.1, 0, 0]}>
+        {/* Small sun emblem on chest */}
+        <group position={[0, 0.6, 0.45]} rotation={[0.15, 0, 0]}>
           <mesh material={goldMaterial}>
-            <circleGeometry args={[0.08, 16]} />
+            <circleGeometry args={[0.05, 16]} />
           </mesh>
-          {[...Array(8)].map((_, i) => (
-            <mesh
-              key={`chest-ray-${i}`}
-              position={[
-                Math.cos((i / 8) * Math.PI * 2) * 0.12,
-                Math.sin((i / 8) * Math.PI * 2) * 0.12,
-                0.01,
-              ]}
-              rotation={[0, 0, (i / 8) * Math.PI * 2]}
-              material={goldMaterial}
-            >
-              <boxGeometry args={[0.015, 0.05, 0.01]} />
-            </mesh>
-          ))}
+          {/* Small rays on chest emblem */}
+          {[...Array(8)].map((_, i) => {
+            const angle = (i / 8) * Math.PI * 2;
+            return (
+              <mesh
+                key={`chest-ray-${i}`}
+                position={[
+                  Math.cos(angle) * 0.08,
+                  Math.sin(angle) * 0.08,
+                  0.01
+                ]}
+                rotation={[0, 0, angle + Math.PI / 2]}
+                material={goldMaterial}
+              >
+                <coneGeometry args={[0.008, 0.04, 4]} />
+              </mesh>
+            );
+          })}
         </group>
+
       </group>
     </Float>
   );

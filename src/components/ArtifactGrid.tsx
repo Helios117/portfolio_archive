@@ -42,7 +42,7 @@ function ArtifactCard({ project, index, onClick, isDark }: ArtifactCardProps) {
       >
         {/* Main card body */}
         <div 
-          className={`relative p-6 transition-colors duration-500
+          className={`relative p-4 sm:p-6 transition-colors duration-500
             ${isDark 
               ? 'bg-gradient-to-br from-[#1f1d1a] via-[#171512] to-[#0f0e0c]' 
               : 'bg-gradient-to-br from-white via-[#fdfcfa] to-[#f8f7f4] border border-stone-200'}`}
@@ -78,22 +78,22 @@ function ArtifactCard({ project, index, onClick, isDark }: ArtifactCardProps) {
           <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-gold-500/30 rounded-bl-sm" />
           <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold-500/30 rounded-br-sm" />
 
-          {/* Featured badge */}
-          {project.featured && (
-            <div className="absolute -top-px -right-px">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gold-500 blur-sm opacity-50" />
-                <div className="relative bg-gradient-to-r from-gold-600 to-gold-400 px-3 py-1 text-xs font-cinzel tracking-widest text-[#0a0908]">
-                  ARTIFACT
-                </div>
+          {/* ARTIFACT badge - shown on all projects */}
+          <div className="absolute -top-px -right-px">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gold-500 blur-sm opacity-50" />
+              <div className="relative bg-gradient-to-r from-gold-600 to-gold-400 px-3 py-1 text-xs font-cinzel tracking-widest text-[#0a0908]">
+                ARTIFACT
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Image placeholder / artifact illustration */}
-          <div className="relative aspect-[16/10] mb-6 overflow-hidden rounded-sm bg-[#0a0908]">
+          {/* Image placeholder / artifact illustration - theme aware */}
+          <div className={`relative aspect-[16/10] mb-6 overflow-hidden rounded-sm transition-colors duration-500
+            ${isDark ? 'bg-[#0a0908]' : 'bg-gradient-to-br from-[#e8e2d9] to-[#d9d0c3]'}`}>
             {/* Decorative frame */}
-            <div className="absolute inset-2 border border-gold-500/20 rounded-sm z-10 pointer-events-none" />
+            <div className={`absolute inset-2 border rounded-sm z-10 pointer-events-none
+              ${isDark ? 'border-gold-500/20' : 'border-amber-600/30'}`} />
             
             {/* Engraved pattern background */}
             <div 
@@ -104,8 +104,8 @@ function ArtifactCard({ project, index, onClick, isDark }: ArtifactCardProps) {
                     45deg,
                     transparent,
                     transparent 10px,
-                    rgba(212, 175, 55, 0.03) 10px,
-                    rgba(212, 175, 55, 0.03) 20px
+                    ${isDark ? 'rgba(212, 175, 55, 0.03)' : 'rgba(139, 90, 43, 0.08)'} 10px,
+                    ${isDark ? 'rgba(212, 175, 55, 0.03)' : 'rgba(139, 90, 43, 0.08)'} 20px
                   )
                 `,
               }}
@@ -113,14 +113,16 @@ function ArtifactCard({ project, index, onClick, isDark }: ArtifactCardProps) {
 
             {/* Project number / artifact ID */}
             <div className="absolute bottom-4 right-4 z-10">
-              <span className="font-cinzel text-6xl font-bold text-gold-500/20">
+              <span className={`font-cinzel text-6xl font-bold transition-colors duration-500
+                ${isDark ? 'text-gold-500/20' : 'text-amber-700/30'}`}>
                 {String(index + 1).padStart(2, '0')}
               </span>
             </div>
 
             {/* Glow effect on hover */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-t from-gold-500/10 via-transparent to-transparent"
+              className={`absolute inset-0 bg-gradient-to-t via-transparent to-transparent
+                ${isDark ? 'from-gold-500/10' : 'from-amber-600/15'}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: isHovered ? 1 : 0 }}
               transition={{ duration: 0.3 }}
@@ -227,7 +229,7 @@ function ArtifactScroll({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md
+      className={`fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-md
         ${isDark ? 'bg-[#0a0908]/95' : 'bg-stone-100/95'}`}
     >
       <motion.div
@@ -236,10 +238,10 @@ function ArtifactScroll({
         exit={{ scale: 0.8, opacity: 0, y: 50 }}
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-auto"
+        className="relative w-full max-w-2xl max-h-[90vh] sm:max-h-[85vh] overflow-auto"
       >
         {/* Scroll paper effect - Theme aware */}
-        <div className={`relative p-8 rounded-sm border transition-colors duration-500
+        <div className={`relative p-4 sm:p-6 md:p-8 rounded-sm border transition-colors duration-500
           ${isDark 
             ? 'bg-linear-to-b from-[#1f1d1a] via-[#171512] to-[#0f0e0c] border-gold-500/20' 
             : 'bg-linear-to-b from-white via-[#fdfcfa] to-[#f8f7f4] border-amber-300'}`}>
@@ -308,7 +310,7 @@ function ArtifactScroll({
           {/* Content */}
           <div className="relative">
             {/* Title */}
-            <h2 className={`font-cinzel text-3xl mb-2 tracking-wide
+            <h2 className={`font-cinzel text-xl sm:text-2xl md:text-3xl mb-2 tracking-wide
               ${isDark ? 'text-gold-400' : 'text-amber-700'}`}>
               {project.title}
             </h2>
@@ -327,7 +329,7 @@ function ArtifactScroll({
             </div>
 
             {/* Description */}
-            <p className={`font-cormorant text-xl leading-relaxed mb-6
+            <p className={`font-cormorant text-base sm:text-lg md:text-xl leading-relaxed mb-6
               ${isDark ? 'text-stone-200' : 'text-stone-700'}`}>
               {project.longDescription || project.description}
             </p>
@@ -337,7 +339,7 @@ function ArtifactScroll({
               {project.tags.map((tag) => (
                 <span
                   key={tag}
-                  className={`px-3 py-1 text-sm font-medium tracking-wider rounded-sm
+                  className={`px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium tracking-wider rounded-sm
                     ${isDark 
                       ? 'bg-gold-500/10 text-gold-400 border border-gold-500/30' 
                       : 'bg-amber-100 text-amber-700 border border-amber-300'}`}
@@ -348,14 +350,14 @@ function ArtifactScroll({
             </div>
 
             {/* Links */}
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               {project.liveLink && (
                 <a
                   href={project.liveLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 bg-gold-600 text-[#0a0908]
-                    font-cinzel text-sm tracking-widest hover:bg-gold-500 transition-colors rounded-sm"
+                  className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 bg-gold-600 text-[#0a0908]
+                    font-cinzel text-xs sm:text-sm tracking-widest hover:bg-gold-500 transition-colors rounded-sm"
                 >
                   <span>VIEW LIVE</span>
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -368,8 +370,8 @@ function ArtifactScroll({
                   href={project.githubLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 border-2 border-gold-500 text-gold-400
-                    font-cinzel text-sm tracking-widest hover:bg-gold-500/10 transition-colors rounded-sm"
+                  className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border-2 border-gold-500 text-gold-400
+                    font-cinzel text-xs sm:text-sm tracking-widest hover:bg-gold-500/10 transition-colors rounded-sm"
                 >
                   <span>SOURCE</span>
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -400,9 +402,9 @@ export default function ArtifactGrid({ className = '' }: ArtifactGridProps) {
 
   return (
     <>
-      <section id="projects" className={`relative py-32 ${className}`}>
+      <section id="projects" className={`relative py-16 sm:py-24 md:py-32 ${className}`}>
         {/* Section header */}
-        <div className="max-w-6xl mx-auto px-6 mb-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-10 sm:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -410,16 +412,16 @@ export default function ArtifactGrid({ className = '' }: ArtifactGridProps) {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h2 className={`font-cinzel text-4xl md:text-5xl mb-4 tracking-wide transition-colors duration-500
+            <h2 className={`font-cinzel text-3xl sm:text-4xl md:text-5xl mb-4 tracking-wide transition-colors duration-500
               ${isDark ? 'text-white' : 'text-stone-800'}`}>
               The Artifacts
             </h2>
             <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="h-px w-24 bg-gradient-to-r from-transparent to-gold-500/50" />
+              <div className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-gold-500/50" />
               <div className="w-3 h-3 rotate-45 border-2 border-gold-500/50" />
-              <div className="h-px w-24 bg-gradient-to-l from-transparent to-gold-500/50" />
+              <div className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-gold-500/50" />
             </div>
-            <p className={`font-cormorant text-xl max-w-2xl mx-auto transition-colors duration-500
+            <p className={`font-cormorant text-base sm:text-lg md:text-xl max-w-2xl mx-auto px-4 sm:px-0 transition-colors duration-500
               ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
               A curated collection of digital creations, each forged with passion and purpose
             </p>
@@ -427,8 +429,8 @@ export default function ArtifactGrid({ className = '' }: ArtifactGridProps) {
         </div>
 
         {/* Grid */}
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {content.projects.map((project, index) => (
               <ArtifactCard
                 key={project.id}

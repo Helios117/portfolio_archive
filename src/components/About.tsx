@@ -9,14 +9,14 @@ export default function About() {
   const isDark = theme === 'dark';
   
   return (
-    <section id="about" className="relative py-32 overflow-hidden">
+    <section id="about" className="relative py-16 sm:py-24 md:py-32 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Radial gradient */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold-500/5 rounded-full blur-3xl" />
         
         {/* Greek pattern border - left */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 opacity-20">
+        <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 md:w-16 opacity-20 hidden sm:block">
           <div 
             className="h-full w-full"
             style={{
@@ -32,7 +32,7 @@ export default function About() {
         </div>
         
         {/* Greek pattern border - right */}
-        <div className="absolute right-0 top-0 bottom-0 w-16 opacity-20">
+        <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 md:w-16 opacity-20 hidden sm:block">
           <div 
             className="h-full w-full"
             style={{
@@ -48,7 +48,7 @@ export default function About() {
         </div>
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-6">
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -57,7 +57,7 @@ export default function About() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className={`font-cinzel text-4xl md:text-5xl mb-4 tracking-wide transition-colors duration-500
+          <h2 className={`font-cinzel text-3xl sm:text-4xl md:text-5xl mb-4 tracking-wide transition-colors duration-500
             ${isDark ? 'text-white' : 'text-stone-800'}`}>
             {content.about.heading}
           </h2>
@@ -77,7 +77,7 @@ export default function About() {
           className="relative"
         >
           {/* Tablet background */}
-          <div className={`relative p-8 md:p-12 rounded-sm transition-colors duration-500
+          <div className={`relative p-4 sm:p-6 md:p-8 lg:p-12 rounded-sm transition-colors duration-500
             ${isDark 
               ? 'bg-gradient-to-br from-[#1a1816] via-[#141210] to-[#0d0c0a]' 
               : 'bg-gradient-to-br from-white via-[#faf9f6] to-[#f5f3ef] shadow-lg shadow-stone-300/50 border border-stone-200'}`}>
@@ -112,7 +112,7 @@ export default function About() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                  className={`font-cormorant text-lg md:text-xl leading-relaxed transition-colors duration-500
+                  className={`font-cormorant text-base sm:text-lg md:text-xl leading-relaxed transition-colors duration-500
                     ${isDark ? 'text-stone-200' : 'text-stone-700'}`}
                 >
                   {index === 0 && (
@@ -163,7 +163,7 @@ export default function About() {
                           viewport={{ once: true }}
                           transition={{ duration: 0.3, delay: 0.7 + categoryIndex * 0.1 + skillIndex * 0.03 }}
                           whileHover={{ scale: 1.05, y: -2 }}
-                          className={`px-3 py-1.5 border rounded-sm font-cinzel text-xs tracking-wider
+                          className={`px-2 sm:px-3 py-1 sm:py-1.5 border rounded-sm font-cinzel text-[10px] sm:text-xs tracking-wider
                             transition-all cursor-default
                             ${isDark 
                               ? 'bg-gold-500/10 border-gold-500/30 text-stone-200 hover:bg-gold-500/20 hover:border-gold-500/50' 

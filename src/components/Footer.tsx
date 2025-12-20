@@ -10,7 +10,7 @@ export default function Footer() {
   const isDark = theme === 'dark';
 
   return (
-    <footer className={`relative py-12 border-t transition-colors duration-500
+    <footer className={`relative py-8 sm:py-12 border-t transition-colors duration-500
       ${isDark ? 'border-gold-500/10' : 'border-gold-500/20'}`}>
       {/* Background gradient */}
       <div className={`absolute inset-0 pointer-events-none transition-colors duration-500
@@ -18,7 +18,7 @@ export default function Footer() {
           ? 'bg-gradient-to-t from-[#0a0908] via-[#0d0c0a] to-transparent' 
           : 'bg-gradient-to-t from-[#f8f6f1] via-[#fffdf8] to-transparent'}`} />
 
-      <div className="relative max-w-6xl mx-auto px-6">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         {/* Greek meander pattern */}
         <div className="flex justify-center mb-8">
           <svg viewBox="0 0 200 20" className="w-48 h-5 text-gold-500/30">
@@ -79,7 +79,7 @@ export default function Footer() {
           </motion.div>
 
           {/* Quote */}
-          <p className={`font-cormorant italic mb-6 max-w-md mx-auto transition-colors duration-500
+          <p className={`font-cormorant italic text-sm sm:text-base mb-6 max-w-md mx-auto px-4 sm:px-0 transition-colors duration-500
             ${isDark ? 'text-stone-400' : 'text-stone-500'}`}>
             &ldquo;Every artifact tells a story, every line of code a verse in the epic of creation.&rdquo;
           </p>
@@ -91,7 +91,7 @@ export default function Footer() {
           </p>
 
           {/* Built with badge */}
-          <div className={`mt-6 flex items-center justify-center gap-2 text-sm transition-colors duration-500
+          <div className={`mt-6 flex flex-wrap items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm transition-colors duration-500
             ${isDark ? 'text-stone-400' : 'text-stone-500'}`}>
             <span>Built with</span>
             <span className={`${isDark ? 'text-gold-500' : 'text-gold-600'}`}>React</span>
