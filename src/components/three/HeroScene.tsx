@@ -18,6 +18,7 @@ import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import DustParticles from './DustParticles';
 import HeliosChariot, { GreekPillar } from './HeliosChariot';
+import { GreekBust } from './GreekBust';
 import { useTheme } from '@/context/ThemeContext';
 
 // Animated directional lights
@@ -187,9 +188,13 @@ function SceneContent({ isDark = true }: { isDark?: boolean }) {
       <BackgroundSphere isDark={isDark} />
       <AnimatedLights isDark={isDark} />
       
-      {/* Main centerpiece - Helios Chariot with Sun */}
+      {/* Main centerpiece - Bust in dark mode, Chariot in light mode */}
       <group position={[0, -0.3, 0]}>
-        <HeliosChariot scale={1.1} isDark={isDark} />
+        {isDark ? (
+          <GreekBust scale={1.1} isDark={isDark} />
+        ) : (
+          <HeliosChariot scale={1.1} isDark={isDark} />
+        )}
       </group>
       
       {/* Decorative pillars - larger and more prominent at sides */}
