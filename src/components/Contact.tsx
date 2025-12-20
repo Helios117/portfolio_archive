@@ -46,13 +46,13 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-32 overflow-hidden">
+    <section id="contact" className="relative py-16 sm:py-24 md:py-32 overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gold-500/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-6">
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -61,16 +61,16 @@ export default function Contact() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className={`font-cinzel text-4xl md:text-5xl mb-4 tracking-wide transition-colors duration-500
+          <h2 className={`font-cinzel text-3xl sm:text-4xl md:text-5xl mb-4 tracking-wide transition-colors duration-500
             ${isDark ? 'text-white' : 'text-stone-800'}`}>
             {content.contact.heading}
           </h2>
           <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="h-px w-24 bg-gradient-to-r from-transparent to-gold-500/50" />
+            <div className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-gold-500/50" />
             <div className="w-3 h-3 rotate-45 border-2 border-gold-500/50" />
-            <div className="h-px w-24 bg-gradient-to-l from-transparent to-gold-500/50" />
+            <div className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-gold-500/50" />
           </div>
-          <p className={`font-cormorant text-xl italic transition-colors duration-500
+          <p className={`font-cormorant text-lg sm:text-xl italic transition-colors duration-500
             ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
             {content.contact.subheading}
           </p>
@@ -84,7 +84,7 @@ export default function Contact() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative"
         >
-          <div className={`relative p-8 md:p-12 rounded-sm transition-colors duration-500
+          <div className={`relative p-4 sm:p-6 md:p-8 lg:p-12 rounded-sm transition-colors duration-500
             ${isDark 
               ? 'bg-gradient-to-br from-[#1a1816] via-[#141210] to-[#0d0c0a]' 
               : 'bg-gradient-to-br from-[#f5f3f0] via-[#ebe8e4] to-[#e0ddd8] shadow-lg'}`}>

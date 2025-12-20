@@ -65,11 +65,11 @@ export default function Hero() {
           />
 
           {/* Title */}
-          <h1 className="font-cinzel text-5xl md:text-7xl lg:text-8xl tracking-wider mb-4">
+          <h1 className="font-cinzel text-4xl sm:text-5xl md:text-7xl lg:text-8xl tracking-wider mb-4">
             <span className="block text-gold-gradient drop-shadow-[0_2px_10px_rgba(212,175,55,0.5)]">
               {content.hero.title.split(' ')[0]}
             </span>
-            <span className={`block text-3xl md:text-4xl lg:text-5xl mt-2 tracking-[0.3em] transition-colors duration-500
+            <span className={`block text-xl sm:text-2xl md:text-4xl lg:text-5xl mt-2 tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.3em] transition-colors duration-500
               ${theme === 'dark' 
                 ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' 
                 : 'text-[#1a1815]'}`}>
@@ -101,7 +101,7 @@ export default function Hero() {
                 style={{ background: 'radial-gradient(ellipse at center, rgba(255,253,248,0.95) 0%, rgba(255,253,248,0.7) 40%, rgba(255,253,248,0) 70%)' }}
               />
             )}
-            <p className={`relative font-cormorant text-xl md:text-2xl leading-relaxed italic transition-colors duration-500
+            <p className={`relative font-cormorant text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed italic transition-colors duration-500 px-4 sm:px-0
               ${theme === 'dark' 
                 ? 'text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]' 
                 : 'text-[#1a1815] drop-shadow-[0_0_20px_rgba(255,253,248,1)]'}`}
@@ -135,7 +135,7 @@ export default function Hero() {
                 style={{ background: 'radial-gradient(ellipse at center, rgba(255,253,248,0.98) 0%, rgba(255,253,248,0.6) 50%, rgba(255,253,248,0) 80%)' }}
               />
             )}
-            <span className={`relative font-cinzel text-xs tracking-[0.3em] transition-colors
+            <span className={`relative font-cinzel text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.3em] transition-colors
               ${theme === 'dark' 
                 ? 'text-gold-500 group-hover:text-gold-400' 
                 : 'text-[#1a1815] font-semibold group-hover:text-[#0d0a07] drop-shadow-[0_0_15px_rgba(255,253,248,1)]'}`}>
