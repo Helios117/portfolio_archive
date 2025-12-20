@@ -13,17 +13,17 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Check for saved theme preference, default to dark
+    // Check for saved theme preference, default to light
     const savedTheme = localStorage.getItem('helios-theme') as Theme | null;
     if (savedTheme) {
       setTheme(savedTheme);
     }
-    // Dark mode is the default, no system preference check
+    // Light mode is the default, no system preference check
   }, []);
 
   useEffect(() => {

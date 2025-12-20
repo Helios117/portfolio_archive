@@ -7,12 +7,12 @@ import {
   ContactShadows, 
   Sparkles,
   PerspectiveCamera,
+  PerformanceMonitor,
 } from '@react-three/drei';
 import { 
   EffectComposer, 
   Bloom, 
   Vignette,
-  ChromaticAberration,
 } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
@@ -21,21 +21,38 @@ import HeliosChariot, { GreekPillar } from './HeliosChariot';
 import { GreekBust } from './GreekBust';
 import { useTheme } from '@/context/ThemeContext';
 
+// Detect if device is mobile/tablet
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  return isMobile;
+}
 // Animated directional lights
-function AnimatedLights({ isDark = true }: { isDark?: boolean }) {
+function AnimatedLights({ isDark = true, isMobile = false }: { isDark?: boolean; isMobile?: boolean }) {
   const spotLight1 = useRef<THREE.SpotLight>(null);
   const spotLight2 = useRef<THREE.SpotLight>(null);
   const pointLight = useRef<THREE.PointLight>(null);
 
   useFrame((state) => {
+    // Slower animation on mobile to reduce load
     const time = state.clock.getElapsedTime();
+    const speed = isMobile ? 0.15 : 0.3;
     
     if (spotLight1.current) {
-      spotLight1.current.position.x = Math.sin(time * 0.3) * 3;
-      spotLight1.current.position.z = Math.cos(time * 0.3) * 3;
+      spotLight1.current.position.x = Math.sin(time * speed) * 3;
+      spotLight1.current.position.z = Math.cos(time * speed) * 3;
     }
     
-    if (pointLight.current) {
+    if (pointLight.current && !isMobile) {
       pointLight.current.intensity = (isDark ? 0.5 : 0.6) + Math.sin(time * 2) * 0.2;
     }
   });
@@ -50,8 +67,8 @@ function AnimatedLights({ isDark = true }: { isDark?: boolean }) {
         penumbra={0.8}
         intensity={isDark ? 2 : 2.5}
         color={isDark ? "#FFD700" : "#D4AF37"}
-        castShadow
-        shadow-mapSize={[2048, 2048]}
+        castShadow={!isMobile}
+        shadow-mapSize={isMobile ? [512, 512] : [2048, 2048]}
         shadow-bias={-0.0001}
       />
       
@@ -65,14 +82,16 @@ function AnimatedLights({ isDark = true }: { isDark?: boolean }) {
         color={isDark ? "#E6D5AC" : "#C9A962"}
       />
       
-      {/* Rim light for dramatic effect */}
-      <spotLight
-        position={[0, 5, -6]}
-        angle={0.6}
-        penumbra={0.5}
-        intensity={isDark ? 1.2 : 1.8}
-        color={isDark ? "#FFF8DC" : "#E6D5AC"}
-      />
+      {/* Rim light for dramatic effect - skip on mobile */}
+      {!isMobile && (
+        <spotLight
+          position={[0, 5, -6]}
+          angle={0.6}
+          penumbra={0.5}
+          intensity={isDark ? 1.2 : 1.8}
+          color={isDark ? "#FFF8DC" : "#E6D5AC"}
+        />
+      )}
 
       {/* Front key light - balanced for light mode */}
       <directionalLight
@@ -91,15 +110,17 @@ function AnimatedLights({ isDark = true }: { isDark?: boolean }) {
         intensity={isDark ? 0.3 : 0.6}
       />
 
-      {/* Floating point light for ethereal effect */}
-      <pointLight
-        ref={pointLight}
-        position={[0, 3, 2]}
-        intensity={isDark ? 0.5 : 0.8}
-        color="#D4AF37"
-        distance={10}
-        decay={2}
-      />
+      {/* Floating point light for ethereal effect - skip on mobile */}
+      {!isMobile && (
+        <pointLight
+          ref={pointLight}
+          position={[0, 3, 2]}
+          intensity={isDark ? 0.5 : 0.8}
+          color="#D4AF37"
+          distance={10}
+          decay={2}
+        />
+      )}
     </>
   );
 }
@@ -126,16 +147,21 @@ function BackgroundSphere({ isDark = true }: { isDark?: boolean }) {
 }
 
 // Animated marble grid floor
-function MarbleGrid({ isDark = true }: { isDark?: boolean }) {
+function MarbleGrid({ isDark = true, isMobile = false }: { isDark?: boolean; isMobile?: boolean }) {
   const gridRef = useRef<THREE.Group>(null);
   
+  // Reduce grid size on mobile
+  const gridSize = isMobile ? 7 : 11;
+  const tileCount = gridSize * gridSize;
+  const halfGrid = Math.floor(gridSize / 2);
+  
   useFrame((state) => {
-    if (gridRef.current) {
-      // Subtle wave animation
+    if (gridRef.current && !isMobile) {
+      // Only animate on desktop - wave animation
       gridRef.current.children.forEach((child, i) => {
         const mesh = child as THREE.Mesh;
-        const x = Math.floor(i / 11) - 5;
-        const z = (i % 11) - 5;
+        const x = Math.floor(i / gridSize) - halfGrid;
+        const z = (i % gridSize) - halfGrid;
         const time = state.clock.getElapsedTime();
         mesh.position.y = Math.sin(time * 0.5 + x * 0.5 + z * 0.5) * 0.02 - 1.5;
       });
@@ -158,22 +184,26 @@ function MarbleGrid({ isDark = true }: { isDark?: boolean }) {
   
   return (
     <group ref={gridRef}>
-      {/* Create a 11x11 grid of tiles */}
-      {[...Array(121)].map((_, i) => {
-        const x = (Math.floor(i / 11) - 5) * 0.8;
-        const z = ((i % 11) - 5) * 0.8;
+      {/* Create grid of tiles */}
+      {[...Array(tileCount)].map((_, i) => {
+        const x = (Math.floor(i / gridSize) - halfGrid) * 0.8;
+        const z = ((i % gridSize) - halfGrid) * 0.8;
         return (
           <group key={i} position={[x, -1.5, z]}>
             <mesh material={tileMaterial}>
               <boxGeometry args={[0.75, 0.05, 0.75]} />
             </mesh>
-            {/* Gold edge lines */}
-            <mesh position={[0.375, 0.03, 0]} material={goldLineMaterial}>
-              <boxGeometry args={[0.02, 0.02, 0.75]} />
-            </mesh>
-            <mesh position={[0, 0.03, 0.375]} material={goldLineMaterial}>
-              <boxGeometry args={[0.75, 0.02, 0.02]} />
-            </mesh>
+            {/* Gold edge lines - skip some on mobile */}
+            {(!isMobile || i % 2 === 0) && (
+              <>
+                <mesh position={[0.375, 0.03, 0]} material={goldLineMaterial}>
+                  <boxGeometry args={[0.02, 0.02, 0.75]} />
+                </mesh>
+                <mesh position={[0, 0.03, 0.375]} material={goldLineMaterial}>
+                  <boxGeometry args={[0.75, 0.02, 0.02]} />
+                </mesh>
+              </>
+            )}
           </group>
         );
       })}
@@ -182,11 +212,11 @@ function MarbleGrid({ isDark = true }: { isDark?: boolean }) {
 }
 
 // Main scene content
-function SceneContent({ isDark = true }: { isDark?: boolean }) {
+function SceneContent({ isDark = true, isMobile = false }: { isDark?: boolean; isMobile?: boolean }) {
   return (
     <>
       <BackgroundSphere isDark={isDark} />
-      <AnimatedLights isDark={isDark} />
+      <AnimatedLights isDark={isDark} isMobile={isMobile} />
       
       {/* Main centerpiece - Bust in dark mode, Chariot in light mode */}
       <group position={[0, -0.3, 0]}>
@@ -197,19 +227,23 @@ function SceneContent({ isDark = true }: { isDark?: boolean }) {
         )}
       </group>
       
-      {/* Decorative pillars - larger and more prominent at sides */}
-      <GreekPillar scale={0.7} position={[-3, -0.8, -1]} isDark={isDark} />
-      <GreekPillar scale={0.7} position={[3, -0.8, -1]} isDark={isDark} />
+      {/* Decorative pillars - hide on mobile for performance */}
+      {!isMobile && (
+        <>
+          <GreekPillar scale={0.7} position={[-3, -0.8, -1]} isDark={isDark} />
+          <GreekPillar scale={0.7} position={[3, -0.8, -1]} isDark={isDark} />
+        </>
+      )}
       
       {/* Animated marble grid floor */}
-      <MarbleGrid isDark={isDark} />
+      <MarbleGrid isDark={isDark} isMobile={isMobile} />
       
-      {/* Dust particles for atmosphere */}
-      <DustParticles count={400} size={0.015} color="#D4AF37" />
+      {/* Dust particles for atmosphere - reduced on mobile */}
+      <DustParticles count={isMobile ? 100 : 400} size={0.015} color="#D4AF37" />
       
-      {/* Subtle sparkles */}
+      {/* Subtle sparkles - reduced on mobile */}
       <Sparkles
-        count={60}
+        count={isMobile ? 20 : 60}
         scale={12}
         size={1.5}
         speed={0.2}
@@ -217,25 +251,30 @@ function SceneContent({ isDark = true }: { isDark?: boolean }) {
         opacity={0.4}
       />
       
-      {/* Contact shadows for grounding */}
-      <ContactShadows
-        position={[0, -1.5, 0]}
-        opacity={0.3}
-        scale={8}
-        blur={2}
-        far={4}
-        color="#1a1a1a"
-      />
+      {/* Contact shadows for grounding - skip on mobile */}
+      {!isMobile && (
+        <ContactShadows
+          position={[0, -1.5, 0]}
+          opacity={0.3}
+          scale={8}
+          blur={2}
+          far={4}
+          color="#1a1a1a"
+        />
+      )}
     </>
   );
 }
 
 // Camera controller with subtle movement
-function CameraController() {
+function CameraController({ isMobile = false }: { isMobile?: boolean }) {
   const { camera } = useThree();
   const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    // Skip mouse tracking on mobile
+    if (isMobile) return;
+    
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.y = (e.clientY / window.innerHeight) * 2 - 1;
@@ -243,9 +282,12 @@ function CameraController() {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [isMobile]);
 
   useFrame(() => {
+    // Skip camera movement on mobile
+    if (isMobile) return;
+    
     // Subtle camera movement based on mouse
     camera.position.x = THREE.MathUtils.lerp(
       camera.position.x,
@@ -283,8 +325,10 @@ interface HeroSceneProps {
 
 export default function HeroScene({ className = '' }: HeroSceneProps) {
   const [mounted, setMounted] = useState(false);
+  const [dpr, setDpr] = useState(1.5);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     setMounted(true);
@@ -297,14 +341,23 @@ export default function HeroScene({ className = '' }: HeroSceneProps) {
   return (
     <div className={`w-full h-full ${className}`}>
       <Canvas
-        shadows
-        dpr={[1, 2]}
+        shadows={!isMobile}
+        dpr={isMobile ? 1 : [1, 2]}
         gl={{ 
-          antialias: true,
-          alpha: true,
-          powerPreference: 'high-performance',
+          antialias: !isMobile,
+          alpha: false,
+          powerPreference: isMobile ? 'low-power' : 'high-performance',
+          stencil: false,
+          depth: true,
         }}
+        frameloop={isMobile ? 'demand' : 'always'}
+        performance={{ min: 0.5 }}
       >
+        <PerformanceMonitor 
+          onDecline={() => setDpr(1)} 
+          onIncline={() => setDpr(1.5)}
+        />
+        
         <PerspectiveCamera 
           makeDefault 
           position={[0, 1.5, 6]} 
@@ -317,28 +370,26 @@ export default function HeroScene({ className = '' }: HeroSceneProps) {
         <fog attach="fog" args={[isDark ? '#0a0908' : '#faf8f3', 8, 30]} />
         
         <Suspense fallback={null}>
-          <SceneContent isDark={isDark} />
-          <CameraController />
+          <SceneContent isDark={isDark} isMobile={isMobile} />
+          <CameraController isMobile={isMobile} />
           
-          {/* Post-processing effects */}
-          <EffectComposer>
-            <Bloom
-              intensity={isDark ? 0.8 : 0.5}
-              luminanceThreshold={0.6}
-              luminanceSmoothing={0.9}
-              mipmapBlur
-            />
-            <Vignette
-              eskil={false}
-              offset={0.1}
-              darkness={isDark ? 0.8 : 0.4}
-              blendFunction={BlendFunction.NORMAL}
-            />
-            <ChromaticAberration
-              blendFunction={BlendFunction.NORMAL}
-              offset={new THREE.Vector2(0.0005, 0.0005)}
-            />
-          </EffectComposer>
+          {/* Post-processing effects - simplified or disabled on mobile */}
+          {!isMobile && (
+            <EffectComposer multisampling={0}>
+              <Bloom
+                intensity={isDark ? 0.6 : 0.4}
+                luminanceThreshold={0.7}
+                luminanceSmoothing={0.9}
+                mipmapBlur
+              />
+              <Vignette
+                eskil={false}
+                offset={0.1}
+                darkness={isDark ? 0.6 : 0.3}
+                blendFunction={BlendFunction.NORMAL}
+              />
+            </EffectComposer>
+          )}
         </Suspense>
       </Canvas>
     </div>
