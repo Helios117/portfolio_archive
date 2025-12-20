@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function ThemeToggle() {
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
 
   return (
     <motion.button
@@ -13,59 +13,63 @@ export default function ThemeToggle() {
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      className="relative w-14 h-14 rounded-full flex items-center justify-center
-        bg-gradient-to-br from-gold-500/20 to-gold-600/10
-        border border-gold-500/30 hover:border-gold-500/50
-        transition-all duration-300 overflow-hidden group"
+      className={`relative w-14 h-14 rounded-full flex items-center justify-center
+        border transition-all duration-300 overflow-hidden group
+        ${isDark 
+          ? 'bg-gradient-to-br from-gold-500/20 to-gold-600/10 border-gold-500/30 hover:border-gold-500/50' 
+          : 'bg-gradient-to-br from-amber-50 to-amber-100/80 border-amber-400/50 hover:border-amber-500'}`}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
-      {/* Sun rays animation for light mode */}
-      <div className={`absolute inset-0 transition-opacity duration-500 ${isDark ? 'opacity-0' : 'opacity-100'}`}>
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute top-1/2 left-1/2 w-0.5 h-3 bg-gold-500/40 origin-bottom"
-            style={{
-              transform: `translate(-50%, -100%) rotate(${i * 45}deg)`,
-            }}
-            animate={{
-              scale: isDark ? 0 : [1, 1.2, 1],
-              opacity: isDark ? 0 : [0.4, 0.8, 0.4],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              delay: i * 0.1,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Sun icon */}
+      {/* Sun icon with rotating rays for light mode */}
       <motion.div
+        className={`absolute transition-opacity duration-300 ${isDark ? 'opacity-0' : 'opacity-100'}`}
         animate={{
           rotate: isDark ? 0 : 360,
-          scale: isDark ? 0.8 : 1,
         }}
-        transition={{ duration: 0.5, ease: 'easeInOut' }}
-        className={`absolute transition-opacity duration-300 ${isDark ? 'opacity-0' : 'opacity-100'}`}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: 'linear',
+        }}
       >
-        <svg
-          className="w-6 h-6 text-gold-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <circle cx="12" cy="12" r="5" fill="currentColor" />
-          <path
-            strokeLinecap="round"
-            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
-          />
+        <svg viewBox="0 0 40 40" className="w-10 h-10">
+          <defs>
+            <linearGradient id="sunGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#D97706" />
+              <stop offset="50%" stopColor="#F59E0B" />
+              <stop offset="100%" stopColor="#D97706" />
+            </linearGradient>
+            <filter id="sunGlow">
+              <feGaussianBlur stdDeviation="0.8" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          {/* Sun circle */}
+          <circle cx="20" cy="20" r="6" fill="url(#sunGoldGradient)" filter="url(#sunGlow)" />
+          {/* Sun rays */}
+          {[...Array(12)].map((_, i) => {
+            const angle = (i * 30) * (Math.PI / 180);
+            const x1 = 20 + Math.cos(angle) * 9;
+            const y1 = 20 + Math.sin(angle) * 9;
+            const x2 = 20 + Math.cos(angle) * 14;
+            const y2 = 20 + Math.sin(angle) * 14;
+            return (
+              <line 
+                key={i}
+                x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke="url(#sunGoldGradient)"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            );
+          })}
         </svg>
       </motion.div>
 
-      {/* Moon icon */}
+      {/* Moon icon with stars */}
       <motion.div
         animate={{
           rotate: isDark ? 0 : -90,
@@ -109,7 +113,8 @@ export default function ThemeToggle() {
       )}
 
       {/* Hover glow */}
-      <div className="absolute inset-0 rounded-full bg-gold-500/0 group-hover:bg-gold-500/10 transition-all duration-300" />
+      <div className={`absolute inset-0 rounded-full transition-all duration-300
+        ${isDark ? 'bg-gold-500/0 group-hover:bg-gold-500/10' : 'bg-amber-500/0 group-hover:bg-amber-500/10'}`} />
     </motion.button>
   );
 }

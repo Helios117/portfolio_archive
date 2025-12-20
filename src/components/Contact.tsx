@@ -36,16 +36,13 @@ export default function Contact() {
     email: '',
     message: '',
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // Simulate submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setFormState({ name: '', email: '', message: '' });
-    alert('Message sent! (This is a demo)');
+  const handleSendMessage = () => {
+    const subject = encodeURIComponent(`Message from ${formState.name || 'Portfolio Visitor'}`);
+    const body = encodeURIComponent(
+      `Name: ${formState.name}\nEmail: ${formState.email}\n\nMessage:\n${formState.message}`
+    );
+    window.location.href = `mailto:${content.contact.email}?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -111,7 +108,7 @@ export default function Contact() {
               </div>
             ))}
 
-            <form onSubmit={handleSubmit} className="relative space-y-6">
+            <div className="relative space-y-6">
               {/* Name field */}
               <div>
                 <label className={`block font-cinzel text-sm tracking-widest mb-2 transition-colors duration-500
@@ -122,7 +119,6 @@ export default function Contact() {
                   type="text"
                   value={formState.name}
                   onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                  required
                   className={`w-full px-4 py-3 rounded-sm font-cormorant text-lg transition-all
                     focus:outline-none focus:ring-1
                     ${isDark 
@@ -142,7 +138,6 @@ export default function Contact() {
                   type="email"
                   value={formState.email}
                   onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                  required
                   className={`w-full px-4 py-3 rounded-sm font-cormorant text-lg transition-all
                     focus:outline-none focus:ring-1
                     ${isDark 
@@ -161,7 +156,6 @@ export default function Contact() {
                 <textarea
                   value={formState.message}
                   onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                  required
                   rows={5}
                   className={`w-full px-4 py-3 rounded-sm font-cormorant text-lg transition-all resize-none
                     focus:outline-none focus:ring-1
@@ -172,19 +166,18 @@ export default function Contact() {
                 />
               </div>
 
-              {/* Submit button */}
+              {/* Send Message button - opens mailto */}
               <motion.button
-                type="submit"
-                disabled={isSubmitting}
+                type="button"
+                onClick={handleSendMessage}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full py-4 bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600
                   font-cinzel text-sm tracking-[0.3em] text-[#0a0908]
-                  rounded-sm relative overflow-hidden group
-                  disabled:opacity-70 disabled:cursor-not-allowed"
+                  rounded-sm relative overflow-hidden group"
               >
                 <span className="relative z-10">
-                  {isSubmitting ? 'SENDING...' : 'SEND MESSAGE'}
+                  SEND MESSAGE
                 </span>
                 {/* Shimmer effect */}
                 <div 
@@ -192,7 +185,7 @@ export default function Contact() {
                     translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
                 />
               </motion.button>
-            </form>
+            </div>
 
             {/* Divider */}
             <div className="flex items-center gap-4 my-10">

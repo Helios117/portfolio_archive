@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import content, { NavLink } from '@/data/content';
 import ThemeToggle from './ThemeToggle';
@@ -167,6 +167,38 @@ export default function MarbleNav({ className = '' }: MarbleNavProps) {
   const [activeId, setActiveId] = useState('home');
   const navRef = useRef<HTMLElement>(null);
   const { theme } = useTheme();
+
+  // Track current section via IntersectionObserver
+  useEffect(() => {
+    const sections = content.nav.map(link => document.querySelector(link.href));
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            if (id) {
+              setActiveId(id);
+            }
+          }
+        });
+      },
+      {
+        rootMargin: '-20% 0px -70% 0px', // Trigger when section is in top 30% of viewport
+        threshold: 0,
+      }
+    );
+
+    sections.forEach((section) => {
+      if (section) observer.observe(section);
+    });
+
+    return () => {
+      sections.forEach((section) => {
+        if (section) observer.unobserve(section);
+      });
+    };
+  }, []);
 
   return (
     <motion.nav

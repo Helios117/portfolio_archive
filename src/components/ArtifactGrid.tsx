@@ -78,22 +78,22 @@ function ArtifactCard({ project, index, onClick, isDark }: ArtifactCardProps) {
           <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-gold-500/30 rounded-bl-sm" />
           <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold-500/30 rounded-br-sm" />
 
-          {/* Featured badge */}
-          {project.featured && (
-            <div className="absolute -top-px -right-px">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gold-500 blur-sm opacity-50" />
-                <div className="relative bg-gradient-to-r from-gold-600 to-gold-400 px-3 py-1 text-xs font-cinzel tracking-widest text-[#0a0908]">
-                  ARTIFACT
-                </div>
+          {/* ARTIFACT badge - shown on all projects */}
+          <div className="absolute -top-px -right-px">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gold-500 blur-sm opacity-50" />
+              <div className="relative bg-gradient-to-r from-gold-600 to-gold-400 px-3 py-1 text-xs font-cinzel tracking-widest text-[#0a0908]">
+                ARTIFACT
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Image placeholder / artifact illustration */}
-          <div className="relative aspect-[16/10] mb-6 overflow-hidden rounded-sm bg-[#0a0908]">
+          {/* Image placeholder / artifact illustration - theme aware */}
+          <div className={`relative aspect-[16/10] mb-6 overflow-hidden rounded-sm transition-colors duration-500
+            ${isDark ? 'bg-[#0a0908]' : 'bg-gradient-to-br from-[#e8e2d9] to-[#d9d0c3]'}`}>
             {/* Decorative frame */}
-            <div className="absolute inset-2 border border-gold-500/20 rounded-sm z-10 pointer-events-none" />
+            <div className={`absolute inset-2 border rounded-sm z-10 pointer-events-none
+              ${isDark ? 'border-gold-500/20' : 'border-amber-600/30'}`} />
             
             {/* Engraved pattern background */}
             <div 
@@ -104,8 +104,8 @@ function ArtifactCard({ project, index, onClick, isDark }: ArtifactCardProps) {
                     45deg,
                     transparent,
                     transparent 10px,
-                    rgba(212, 175, 55, 0.03) 10px,
-                    rgba(212, 175, 55, 0.03) 20px
+                    ${isDark ? 'rgba(212, 175, 55, 0.03)' : 'rgba(139, 90, 43, 0.08)'} 10px,
+                    ${isDark ? 'rgba(212, 175, 55, 0.03)' : 'rgba(139, 90, 43, 0.08)'} 20px
                   )
                 `,
               }}
@@ -113,14 +113,16 @@ function ArtifactCard({ project, index, onClick, isDark }: ArtifactCardProps) {
 
             {/* Project number / artifact ID */}
             <div className="absolute bottom-4 right-4 z-10">
-              <span className="font-cinzel text-6xl font-bold text-gold-500/20">
+              <span className={`font-cinzel text-6xl font-bold transition-colors duration-500
+                ${isDark ? 'text-gold-500/20' : 'text-amber-700/30'}`}>
                 {String(index + 1).padStart(2, '0')}
               </span>
             </div>
 
             {/* Glow effect on hover */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-t from-gold-500/10 via-transparent to-transparent"
+              className={`absolute inset-0 bg-gradient-to-t via-transparent to-transparent
+                ${isDark ? 'from-gold-500/10' : 'from-amber-600/15'}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: isHovered ? 1 : 0 }}
               transition={{ duration: 0.3 }}
