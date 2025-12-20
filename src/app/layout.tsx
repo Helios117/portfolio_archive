@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${cinzel.variable} ${cormorant.variable} antialiased bg-[#0a0908] text-stone-100 transition-colors duration-500`}
+        className={`${cinzel.variable} ${cormorant.variable} antialiased bg-[#fffdf8] text-stone-800 transition-colors duration-500`}
       >
         <ThemeProvider>
           {children}

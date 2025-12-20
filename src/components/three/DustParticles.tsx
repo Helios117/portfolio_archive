@@ -19,6 +19,7 @@ export default function DustParticles({
 }: DustParticlesProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const materialRef = useRef<THREE.PointsMaterial>(null);
+  const frameCount = useRef(0);
 
   // Generate random positions for particles
   const particles = useMemo(() => {
@@ -45,14 +46,21 @@ export default function DustParticles({
     return { positions, velocities, opacities };
   }, [count, area]);
 
-  // Animate particles
+  // Animate particles - throttled for better performance
   useFrame((state) => {
     if (!pointsRef.current) return;
+    
+    // Throttle updates - only update every 2nd frame for low particle counts
+    frameCount.current++;
+    if (count < 200 && frameCount.current % 2 !== 0) return;
 
     const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
     const time = state.clock.getElapsedTime();
+    
+    // Update fewer particles per frame for better performance
+    const updateStep = count < 200 ? 1 : 2;
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count; i += updateStep) {
       const i3 = i * 3;
 
       // Update positions with velocities and slight sine wave motion
