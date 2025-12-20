@@ -64,7 +64,7 @@ function HeliosSun({ isDark = true }: { isDark?: boolean }) {
   });
 
   return (
-    <group ref={sunRef} position={[0, 1.0, 0.1]}>
+    <group ref={sunRef} position={[-0.3, 1.0, 0]}>
       {/* Sun core */}
       <mesh material={sunCoreMaterial}>
         <sphereGeometry args={[0.45, 64, 64]} />
@@ -80,8 +80,8 @@ function HeliosSun({ isDark = true }: { isDark?: boolean }) {
         <sphereGeometry args={[0.68, 32, 32]} />
       </mesh>
 
-      {/* Sun rays - 12 rotating rays only */}
-      <group ref={raysRef}>
+      {/* Sun rays - 12 rotating rays - facing viewer */}
+      <group ref={raysRef} rotation={[0, Math.PI / 2, 0]}>
         {[...Array(12)].map((_, i) => {
           const angle = (i * 30) * (Math.PI / 180);
           return (
@@ -112,11 +112,11 @@ function HeliosSun({ isDark = true }: { isDark?: boolean }) {
   );
 }
 
-// Greek/Roman Chariot - Curved design with proper scaling
+// Greek/Roman Chariot - Greek Pottery Style with flowing curves
 function Chariot({ isDark = true }: { isDark?: boolean }) {
   const chariotRef = useRef<THREE.Group>(null);
 
-  // Bronze/gold material for chariot
+  // Bronze/gold material for chariot body
   const bronzeMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
       color: isDark ? '#CD7F32' : '#B87333',
@@ -124,7 +124,7 @@ function Chariot({ isDark = true }: { isDark?: boolean }) {
       metalness: 0.9,
       emissive: '#8B4513',
       emissiveIntensity: isDark ? 0.1 : 0.15,
-      side: THREE.FrontSide,
+      side: THREE.DoubleSide,
     });
   }, [isDark]);
 
@@ -136,145 +136,163 @@ function Chariot({ isDark = true }: { isDark?: boolean }) {
       metalness: 0.95,
       emissive: '#D4AF37',
       emissiveIntensity: isDark ? 0.2 : 0.3,
-    });
-  }, [isDark]);
-
-  // Rich wood material
-  const woodMaterial = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
-      color: isDark ? '#5D4037' : '#6D4C41',
-      roughness: 0.6,
-      metalness: 0.05,
       side: THREE.DoubleSide,
     });
   }, [isDark]);
 
-  // Dark leather/fabric - only for interior
-  const leatherMaterial = useMemo(() => {
+  // Dark interior material
+  const darkMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
-      color: isDark ? '#2C1810' : '#3E2723',
+      color: isDark ? '#1a1a1a' : '#2d2d2d',
       roughness: 0.8,
-      metalness: 0.0,
-      side: THREE.BackSide,
+      metalness: 0.1,
+      side: THREE.DoubleSide,
     });
   }, [isDark]);
 
+  // Create the chariot body shape using a custom curve
+  const chariotShape = useMemo(() => {
+    const shape = new THREE.Shape();
+    
+    // Start at bottom back
+    shape.moveTo(0.5, 0);
+    
+    // Curve up for the back wall (high curve like in reference)
+    shape.bezierCurveTo(0.55, 0.3, 0.5, 0.7, 0.35, 1.0);
+    
+    // Top of back wall curves forward
+    shape.bezierCurveTo(0.2, 1.1, 0, 1.05, -0.2, 0.9);
+    
+    // Front curves down and forward (sweeping front like in reference)
+    shape.bezierCurveTo(-0.5, 0.7, -0.8, 0.5, -1.0, 0.35);
+    
+    // Front tip curves down
+    shape.bezierCurveTo(-1.1, 0.25, -1.15, 0.15, -1.1, 0.05);
+    
+    // Bottom edge with decorative wave (flame/feather pattern)
+    shape.bezierCurveTo(-1.0, 0.0, -0.8, 0.08, -0.6, 0.0);
+    shape.bezierCurveTo(-0.4, -0.05, -0.2, 0.05, 0, 0.0);
+    shape.bezierCurveTo(0.2, -0.03, 0.4, 0.02, 0.5, 0);
+    
+    return shape;
+  }, []);
+
+  const extrudeSettings = useMemo(() => ({
+    steps: 1,
+    depth: 0.8,
+    bevelEnabled: true,
+    bevelThickness: 0.03,
+    bevelSize: 0.02,
+    bevelSegments: 3,
+  }), []);
+
   return (
-    <group ref={chariotRef} position={[0, -0.25, 0]} rotation={[0, Math.PI * 0.15, 0]} scale={1.15}>
-      {/* Main chariot body - curved shell */}
-      <mesh position={[0, 0.45, -0.1]} rotation={[0.15, 0, 0]} material={bronzeMaterial}>
-        <cylinderGeometry args={[0.9, 0.7, 0.8, 32, 1, true, -Math.PI * 0.7, Math.PI * 1.4]} />
+    <group ref={chariotRef} position={[0, -0.1, 0]} rotation={[0, Math.PI * 0.1, 0]} scale={1.0}>
+      
+      {/* Main chariot body - extruded shape */}
+      <mesh position={[0.3, 0, -0.4]} material={bronzeMaterial}>
+        <extrudeGeometry args={[chariotShape, extrudeSettings]} />
       </mesh>
-
-      {/* Inner lining - using BackSide to show inside only */}
-      <mesh position={[0, 0.45, -0.1]} rotation={[0.15, 0, 0]} material={leatherMaterial}>
-        <cylinderGeometry args={[0.89, 0.69, 0.79, 32, 1, true, -Math.PI * 0.7, Math.PI * 1.4]} />
+      
+      {/* Inner dark panel for depth */}
+      <mesh position={[0.28, 0.02, -0.38]} scale={[0.92, 0.92, 0.95]} material={darkMaterial}>
+        <extrudeGeometry args={[chariotShape, { ...extrudeSettings, depth: 0.76, bevelEnabled: false }]} />
       </mesh>
-
-      {/* Chariot floor - curved */}
-      <mesh position={[0, 0.08, 0.15]} rotation={[-0.05, 0, 0]} material={woodMaterial}>
-        <cylinderGeometry args={[0.75, 0.75, 0.1, 32, 1, false, -Math.PI * 0.5, Math.PI]} />
+      
+      {/* Gold trim along top edge */}
+      <mesh position={[0.3, 0.03, -0.4]} scale={[1.02, 1.02, 1.01]}>
+        <extrudeGeometry args={[chariotShape, { ...extrudeSettings, depth: 0.02, bevelEnabled: false }]} />
+        <meshStandardMaterial {...goldMaterial} />
       </mesh>
-
-      {/* Front curved panel - ornate */}
-      <mesh position={[0, 0.5, -0.68]} rotation={[0.15, 0, 0]} material={goldMaterial}>
-        <boxGeometry args={[1.5, 0.7, 0.06]} />
+      
+      {/* Floor of chariot */}
+      <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]} material={darkMaterial}>
+        <planeGeometry args={[0.9, 0.7]} />
       </mesh>
-
-      {/* Decorative ridge on front */}
-      <mesh position={[0, 0.85, -0.65]} rotation={[0.15, 0, 0]} material={goldMaterial}>
-        <boxGeometry args={[1.6, 0.08, 0.08]} />
-      </mesh>
-
-      {/* Side rails - curved bronze */}
-      <mesh position={[-0.72, 0.55, 0.1]} rotation={[0, 0.1, 0.1]} material={bronzeMaterial}>
-        <boxGeometry args={[0.06, 0.6, 0.9]} />
-      </mesh>
-      <mesh position={[0.72, 0.55, 0.1]} rotation={[0, -0.1, -0.1]} material={bronzeMaterial}>
-        <boxGeometry args={[0.06, 0.6, 0.9]} />
-      </mesh>
-
-      {/* Decorative corner finials */}
-      <mesh position={[-0.7, 0.9, -0.35]} material={goldMaterial}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-      </mesh>
-      <mesh position={[0.7, 0.9, -0.35]} material={goldMaterial}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-      </mesh>
-      <mesh position={[-0.7, 0.9, 0.5]} material={goldMaterial}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-      </mesh>
-      <mesh position={[0.7, 0.9, 0.5]} material={goldMaterial}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-      </mesh>
-
-      {/* Sun disc emblem on front */}
-      <mesh position={[0, 0.55, -0.6]} material={goldMaterial}>
-        <circleGeometry args={[0.2, 32]} />
-      </mesh>
-      <mesh position={[0, 0.55, -0.62]} material={goldMaterial}>
-        <torusGeometry args={[0.22, 0.025, 16, 32]} />
-      </mesh>
-
-      {/* Decorative rays on emblem */}
-      {[...Array(8)].map((_, i) => {
-        const angle = (i * 45) * (Math.PI / 180);
+      
+      {/* Decorative gold band along bottom */}
+      {[...Array(6)].map((_, i) => {
+        const t = i / 5;
+        const x = 0.4 - t * 1.3;
+        const y = 0.05 + Math.sin(t * Math.PI) * 0.03;
         return (
-          <mesh
-            key={i}
-            position={[
-              Math.cos(angle) * 0.28,
-              0.55 + Math.sin(angle) * 0.28,
-              -0.61
-            ]}
-            rotation={[0, 0, angle]}
-            material={goldMaterial}
-          >
-            <boxGeometry args={[0.12, 0.025, 0.02]} />
+          <mesh key={`bottom-${i}`} position={[x, y, 0]} material={goldMaterial}>
+            <sphereGeometry args={[0.025, 8, 8]} />
           </mesh>
         );
       })}
-
-      {/* Chariot wheels - larger and more detailed */}
-      <group position={[-0.95, -0.1, 0.15]}>
-        <Wheel isDark={isDark} />
+      
+      {/* Left side decorative elements - flame/feather pattern */}
+      {[...Array(5)].map((_, i) => {
+        const t = i / 4;
+        const x = 0.3 - t * 1.1;
+        const baseY = 0.1 + t * 0.15;
+        return (
+          <mesh 
+            key={`flame-left-${i}`} 
+            position={[x, baseY, -0.42]}
+            rotation={[0, 0, -0.3 - t * 0.4]}
+            material={goldMaterial}
+          >
+            <coneGeometry args={[0.03, 0.15 + t * 0.1, 4]} />
+          </mesh>
+        );
+      })}
+      
+      {/* Right side decorative elements */}
+      {[...Array(5)].map((_, i) => {
+        const t = i / 4;
+        const x = 0.3 - t * 1.1;
+        const baseY = 0.1 + t * 0.15;
+        return (
+          <mesh 
+            key={`flame-right-${i}`} 
+            position={[x, baseY, 0.42]}
+            rotation={[0, 0, -0.3 - t * 0.4]}
+            material={goldMaterial}
+          >
+            <coneGeometry args={[0.03, 0.15 + t * 0.1, 4]} />
+          </mesh>
+        );
+      })}
+      
+      {/* Chariot wheels - larger and properly oriented */}
+      <group position={[0.15, 0, -0.65]}>
+        <GreekWheel isDark={isDark} />
       </group>
-      <group position={[0.95, -0.1, 0.15]}>
-        <Wheel isDark={isDark} />
+      <group position={[0.15, 0, 0.65]}>
+        <GreekWheel isDark={isDark} />
       </group>
 
-      {/* Axle - decorative */}
-      <mesh position={[0, -0.1, 0.15]} rotation={[0, 0, Math.PI / 2]} material={bronzeMaterial}>
-        <cylinderGeometry args={[0.05, 0.05, 2.1, 16]} />
+      {/* Axle */}
+      <mesh position={[0.15, 0, 0]} rotation={[Math.PI / 2, 0, 0]} material={bronzeMaterial}>
+        <cylinderGeometry args={[0.04, 0.04, 1.4, 16]} />
       </mesh>
       
       {/* Axle caps */}
-      <mesh position={[-1.05, -0.1, 0.15]} rotation={[0, 0, Math.PI / 2]} material={goldMaterial}>
-        <cylinderGeometry args={[0.08, 0.06, 0.08, 16]} />
+      <mesh position={[0.15, 0, -0.72]} rotation={[Math.PI / 2, 0, 0]} material={goldMaterial}>
+        <cylinderGeometry args={[0.06, 0.05, 0.06, 16]} />
       </mesh>
-      <mesh position={[1.05, -0.1, 0.15]} rotation={[0, 0, Math.PI / 2]} material={goldMaterial}>
-        <cylinderGeometry args={[0.08, 0.06, 0.08, 16]} />
+      <mesh position={[0.15, 0, 0.72]} rotation={[Math.PI / 2, 0, 0]} material={goldMaterial}>
+        <cylinderGeometry args={[0.06, 0.05, 0.06, 16]} />
       </mesh>
-
-      {/* Decorative scrollwork on sides */}
-      <mesh position={[-0.75, 0.3, -0.2]} rotation={[0, Math.PI / 2, 0]} material={goldMaterial}>
-        <torusGeometry args={[0.12, 0.02, 8, 16, Math.PI]} />
-      </mesh>
-      <mesh position={[0.75, 0.3, -0.2]} rotation={[0, -Math.PI / 2, 0]} material={goldMaterial}>
-        <torusGeometry args={[0.12, 0.02, 8, 16, Math.PI]} />
+      
+      {/* Connection point to horses (at front) */}
+      <mesh position={[-0.85, 0.15, 0]} rotation={[0, 0, -0.2]} material={bronzeMaterial}>
+        <cylinderGeometry args={[0.02, 0.025, 0.4, 8]} />
       </mesh>
     </group>
   );
 }
 
-// Chariot wheel component - More detailed
-function Wheel({ isDark = true }: { isDark?: boolean }) {
+// Greek-style wheel with detailed spokes and decorative hub
+function GreekWheel({ isDark = true }: { isDark?: boolean }) {
   const wheelRef = useRef<THREE.Group>(null);
 
   const rimMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
       color: '#8B4513',
-      roughness: 0.5,
+      roughness: 0.4,
       metalness: 0.3,
     });
   }, []);
@@ -295,47 +313,71 @@ function Wheel({ isDark = true }: { isDark?: boolean }) {
     });
   }, []);
 
+  const darkMaterial = useMemo(() => {
+    return new THREE.MeshStandardMaterial({
+      color: isDark ? '#1a1a1a' : '#2d2d2d',
+      roughness: 0.9,
+      metalness: 0.0,
+    });
+  }, [isDark]);
+
   useFrame((state) => {
     if (wheelRef.current) {
-      wheelRef.current.rotation.x = state.clock.getElapsedTime() * 0.4;
+      // Rotate clockwise around Z axis
+      wheelRef.current.rotation.z = -state.clock.getElapsedTime() * 0.5;
     }
   });
 
   return (
-    <group ref={wheelRef} rotation={[0, Math.PI / 2, 0]}>
-      {/* Outer rim */}
+    <group ref={wheelRef}>
+      {/* Outer rim - in XY plane (default torus orientation) */}
       <mesh material={rimMaterial}>
-        <torusGeometry args={[0.5, 0.06, 16, 32]} />
+        <torusGeometry args={[0.55, 0.065, 16, 32]} />
       </mesh>
       
       {/* Inner rim detail */}
       <mesh material={hubMaterial}>
-        <torusGeometry args={[0.45, 0.03, 12, 32]} />
+        <torusGeometry args={[0.48, 0.03, 12, 32]} />
       </mesh>
       
-      {/* Hub - larger and more ornate */}
-      <mesh material={hubMaterial}>
-        <cylinderGeometry args={[0.12, 0.12, 0.15, 16]} />
+      {/* Hub - cylinder along Z axis */}
+      <mesh rotation={[Math.PI / 2, 0, 0]} material={hubMaterial}>
+        <cylinderGeometry args={[0.14, 0.14, 0.12, 24]} />
       </mesh>
       
-      {/* Hub cap */}
-      <mesh position={[0, 0, 0.08]} material={spokeMaterial}>
-        <sphereGeometry args={[0.08, 16, 16]} />
+      {/* Hub center cap */}
+      <mesh position={[0, 0, 0.07]} rotation={[Math.PI / 2, 0, 0]} material={spokeMaterial}>
+        <cylinderGeometry args={[0.1, 0.1, 0.02, 16]} />
       </mesh>
-
-      {/* Spokes - 8 detailed spokes */}
+      
+      {/* Hub center dark circle */}
+      <mesh position={[0, 0, 0.08]} rotation={[Math.PI / 2, 0, 0]} material={darkMaterial}>
+        <cylinderGeometry args={[0.05, 0.05, 0.02, 16]} />
+      </mesh>
+      
+      {/* Hub decorative ring */}
+      <mesh material={spokeMaterial}>
+        <torusGeometry args={[0.12, 0.015, 8, 24]} />
+      </mesh>
+      
+      {/* 8 spokes - radial from center to rim in XY plane */}
       {[...Array(8)].map((_, i) => {
         const angle = (i * 45) * (Math.PI / 180);
+        const spokeLength = 0.36;
+        const spokeRadius = 0.14 + spokeLength / 2; // Start from hub edge
         return (
-          <group key={i}>
-            <mesh
-              position={[Math.cos(angle) * 0.28, Math.sin(angle) * 0.28, 0]}
-              rotation={[0, 0, angle]}
-              material={spokeMaterial}
-            >
-              <boxGeometry args={[0.42, 0.025, 0.025]} />
-            </mesh>
-          </group>
+          <mesh
+            key={i}
+            position={[
+              Math.cos(angle) * spokeRadius,
+              Math.sin(angle) * spokeRadius,
+              0
+            ]}
+            rotation={[0, 0, angle]}
+            material={spokeMaterial}
+          >
+            <boxGeometry args={[spokeLength, 0.035, 0.025]} />
+          </mesh>
         );
       })}
     </group>
