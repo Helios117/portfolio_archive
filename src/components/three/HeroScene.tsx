@@ -346,11 +346,10 @@ export default function HeroScene({ className = '' }: HeroSceneProps) {
         gl={{ 
           antialias: !isMobile,
           alpha: false,
-          powerPreference: isMobile ? 'low-power' : 'high-performance',
+          powerPreference: 'default',
           stencil: false,
           depth: true,
         }}
-        frameloop={isMobile ? 'demand' : 'always'}
         performance={{ min: 0.5 }}
       >
         <PerformanceMonitor 
