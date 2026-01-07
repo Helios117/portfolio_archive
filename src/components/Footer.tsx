@@ -80,25 +80,25 @@ export default function Footer() {
 
           {/* Quote */}
           <p className={`font-cormorant italic text-sm sm:text-base mb-6 max-w-md mx-auto px-4 sm:px-0 transition-colors duration-500 font-medium
-            ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
+            ${isDark ? 'text-amber-200/80' : 'text-amber-900/80'}`}>
             &ldquo;Every artifact tells a story, every line of code a verse in the epic of creation.&rdquo;
           </p>
 
           {/* Copyright */}
           <p className={`font-cinzel text-xs tracking-widest transition-colors duration-500
-            ${isDark ? 'text-gold-500/60' : 'text-gold-600/70'}`}>
+            ${isDark ? 'text-gold-500' : 'text-gold-700'}`}>
             &copy; {currentYear} {content.meta.author}. Forged with passion.
           </p>
 
           {/* Built with badge */}
           <div className={`mt-6 flex flex-wrap items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm transition-colors duration-500
-            ${isDark ? 'text-stone-400' : 'text-stone-500'}`}>
+            ${isDark ? 'text-stone-400' : 'text-stone-600'}`}>
             <span>Built with</span>
-            <span className={`${isDark ? 'text-gold-500' : 'text-gold-600'}`}>React</span>
+            <span className={`${isDark ? 'text-gold-400' : 'text-amber-600'}`}>React</span>
             <span>•</span>
-            <span className={`${isDark ? 'text-gold-500' : 'text-gold-600'}`}>Three.js</span>
+            <span className={`${isDark ? 'text-gold-400' : 'text-amber-600'}`}>Three.js</span>
             <span>•</span>
-            <span className={`${isDark ? 'text-gold-500' : 'text-gold-600'}`}>Tailwind</span>
+            <span className={`${isDark ? 'text-gold-400' : 'text-amber-600'}`}>Tailwind</span>
           </div>
         </div>
       </div>

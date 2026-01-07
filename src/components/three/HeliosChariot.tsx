@@ -8,6 +8,7 @@ import * as THREE from 'three';
 interface HeliosChariotProps {
   scale?: number;
   isDark?: boolean;
+  isMobile?: boolean;
 }
 
 // Helios Sun - Radiant celestial body
@@ -385,7 +386,7 @@ function GreekWheel({ isDark = true }: { isDark?: boolean }) {
 }
 
 // Main Helios Chariot component with Sun
-export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChariotProps) {
+export default function HeliosChariot({ scale = 1, isDark = true, isMobile = false }: HeliosChariotProps) {
   const groupRef = useRef<THREE.Group>(null);
   const { pointer } = useThree();
 
@@ -398,7 +399,6 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
     // Moves in a wide arc from right to left
     const sweepSpeed = 0.25; 
     // Mobile adjustment: Much tighter orbit and adjusted center to ensure visibility
-    const isMobile = window.innerWidth < 768;
     const sweepRadius = isMobile ? 1.4 : 6; // Even tighter radius for mobile
     
     // Calculate position

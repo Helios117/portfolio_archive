@@ -31,10 +31,11 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
     const time = state.clock.getElapsedTime();
     
     // Rotate Earth slowly
-    earthRef.current.rotation.y = time * 0.05;
+    // Initial offset of Math.PI sets Africa/Europe facing forward for standard maps
+    earthRef.current.rotation.y = time * 0.05 + Math.PI;
     
     // Rotate clouds slightly faster than earth for realism
-    cloudsRef.current.rotation.y = time * 0.07;
+    cloudsRef.current.rotation.y = time * 0.07 + Math.PI;
 
     // Orbit the light to match Chariot's movement
     const orbitSpeed = 0.25;
@@ -48,33 +49,33 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
 
   return (
     <group>
-      {/* Strong Ambient Light for Base Visibility - slightly cooler/bluer */}
-      <ambientLight intensity={isDark ? 0.6 : 0.8} color="#b0d8ff" />
+      {/* Reduced Ambient Light for Higher Contrast */}
+      <ambientLight intensity={isDark ? 0.2 : 0.4} color="#b0d8ff" />
       
       {/* Dynamic Chariot Light - Gold/Orange for contrast */}
       <pointLight 
         ref={lightRef}
-        intensity={isDark ? 10.0 : 15.0} // Even stronger intensity for bigger difference
+        intensity={isDark ? 15.0 : 25.0} // Stronger for dramatic contrast
         color="#ffaa00" 
-        distance={6}
+        distance={8}
         decay={1.5}
       />
       
-      {/* Rim/Fill Light */}
-      <directionalLight position={[2, 2, 5]} intensity={isDark ? 0.5 : 0.8} color="#ffffff" />
+      {/* Weak Fill Light just to prevent pitch black shadows */}
+      <directionalLight position={[2, 2, 5]} intensity={isDark ? 0.2 : 0.4} color="#ffffff" />
 
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
-        <group ref={earthRef} rotation={[0, -Math.PI / 2, 0]}> {/* Initial rotation to show continents */}
-          {/* Earth Sphere - Standard Material with high metalness/roughness for reflections */}
+        <group ref={earthRef}>
+          {/* Earth Sphere */}
           <mesh>
             <sphereGeometry args={[1, 64, 64]} />
             <meshStandardMaterial 
               map={colorMap} 
-              color="#4da6ff" // Tint it blue
-              roughness={0.3} // Smoother surface for better reflections
-              metalness={0.4} // Metallic hint to catch the light
-              emissive="#1a4d7c" // Slight inner glow
-              emissiveIntensity={0.2}
+              color="#4da6ff" 
+              roughness={0.2} // Reduced roughness for sharper, shinier reflections (water effect)
+              metalness={0.1} // Low metalness for water/dielectric, but shiny
+              emissive="#1a4d7c" 
+              emissiveIntensity={0.1} 
             />
           </mesh>
           

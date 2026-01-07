@@ -223,7 +223,7 @@ function SceneContent({ isDark = true, isMobile = false }: { isDark?: boolean; i
         {isDark ? (
           <GreekBust scale={1.1} isDark={isDark} />
         ) : (
-          <HeliosChariot scale={1.1} isDark={isDark} />
+          <HeliosChariot scale={1.1} isDark={isDark} isMobile={isMobile} />
         )}
       </group>
       
