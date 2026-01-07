@@ -41,6 +41,7 @@ export interface ContactContent {
   heading: string;
   subheading: string;
   email: string;
+  formAction?: string;
   socialLinks: {
     platform: string;
     url: string;
@@ -192,6 +193,7 @@ const content: SiteContent = {
     heading: "Summon Me",
     subheading: "Let us forge something legendary together",
     email: "suraj.vaidyanathan@gmail.com",
+    formAction: "https://formspree.io/f/your-id-here", // Replace with your Formspree ID
     socialLinks: [
       { platform: "GitHub", url: "https://github.com/Helios117", icon: "github" },
       { platform: "LinkedIn", url: "https://www.linkedin.com/in/suraj-vaidyanathan-6bb080356/", icon: "linkedin" },
