@@ -399,20 +399,21 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
     const sweepSpeed = 0.25; 
     // Mobile adjustment: Much tighter orbit and adjusted center to ensure visibility
     const isMobile = window.innerWidth < 768;
-    const sweepRadius = isMobile ? 1.8 : 6; 
+    const sweepRadius = isMobile ? 1.4 : 6; // Even tighter radius for mobile
     
     // Calculate position
-    const cosTime = Math.cos(time * sweepSpeed);
-    const sinTime = Math.sin(time * sweepSpeed);
+    // Add phase offset so it starts in front of camera instead of side
+    const phaseOffset = isMobile ? Math.PI / 2 : 0; 
+    const cosTime = Math.cos(time * sweepSpeed + phaseOffset);
+    const sinTime = Math.sin(time * sweepSpeed + phaseOffset);
 
     // X position: sweep back and forth
     const sweepX = cosTime * sweepRadius;
     
     // Z position: 
-    // On mobile: keep it closer to camera (positive Z) and reduce depth variation
-    // On desktop: recede more for dramatic effect
-    const zOffset = isMobile ? 0.5 : -2; 
-    const zDepth = isMobile ? 1.0 : 2.0;
+    // On mobile: keep it strictly in front (positive Z)
+    const zOffset = isMobile ? 1.5 : -2; 
+    const zDepth = isMobile ? 0.5 : 2.0; // Reduced depth variation on mobile
     const sweepZ = sinTime * zDepth + zOffset;
     
     groupRef.current.position.x = sweepX;
@@ -420,9 +421,12 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
     
     // Adjust Y position specifically for mobile to be lower/more centered if needed
     if (isMobile) {
-      groupRef.current.position.y = -0.5; // Lower it slightly to be more visible under text
+      groupRef.current.position.y = -0.3; 
+      // Force smaller scale on mobile specifically in the loop to be safe
+      groupRef.current.scale.setScalar(scale * 0.7);
     } else {
       groupRef.current.position.y = 0;
+      groupRef.current.scale.setScalar(scale);
     }
 
     // Banking turn effect based on position
