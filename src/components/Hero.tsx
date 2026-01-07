@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import content from '@/data/content';
 import { useTheme } from '@/context/ThemeContext';
-import { EarthIcon, MoonIcon } from './CelestialIcons';
+import { MoonIcon } from './CelestialIcons';
 
 // Dynamic import for 3D scene to avoid SSR issues
 const HeroScene = dynamic(() => import('./three/HeroScene'), {
@@ -21,6 +21,8 @@ const HeroScene = dynamic(() => import('./three/HeroScene'), {
     </div>
   ),
 });
+
+const EarthMini = dynamic(() => import('./three/EarthMini'), { ssr: false });
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,11 +85,11 @@ export default function Hero() {
               <span>L</span>
               <span>I</span>
               {/* O replaced by Icon */}
-              <div className="w-[0.7em] h-[0.7em] relative flex items-center justify-center">
+              <div className="w-[0.8em] h-[0.8em] relative flex items-center justify-center -mb-2 sm:-mb-4">
                 {theme === 'dark' ? (
                   <MoonIcon className="w-full h-full text-gold-100 animate-pulse" />
                 ) : (
-                  <EarthIcon className="w-full h-full text-blue-500 animate-[spin_10s_linear_infinite]" />
+                  <EarthMini isDark={false} />
                 )}
               </div>
               <span>S</span>
