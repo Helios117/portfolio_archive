@@ -87,7 +87,7 @@ export default function Hero() {
                 {theme === 'dark' ? (
                   <MoonIcon className="w-full h-full text-gold-100 animate-pulse" />
                 ) : (
-                  <EarthIcon className="w-full h-full text-blue-500 animate-spin-slow" />
+                  <EarthIcon className="w-full h-full text-blue-500 animate-[spin_10s_linear_infinite]" />
                 )}
               </div>
               <span>S</span>
@@ -95,7 +95,7 @@ export default function Hero() {
             <span className={`block text-xl sm:text-2xl md:text-4xl lg:text-5xl mt-4 tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.3em] transition-colors duration-500
               ${theme === 'dark' 
                 ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' 
-                : 'text-[#3d342b] font-semibold'}`}>
+                : 'text-[#2a241e] font-bold drop-shadow-sm'}`}> {/* Improved light mode contrast */}
               {content.hero.title.split(' ').slice(1).join(' ')}
             </span>
           </h1>
@@ -127,7 +127,7 @@ export default function Hero() {
             <p className={`relative font-cormorant text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed italic transition-colors duration-500 px-4 sm:px-0
               ${theme === 'dark' 
                 ? 'text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]' 
-                : 'text-[#4a3f35] font-medium drop-shadow-[0_0_20px_rgba(255,253,248,1)]'}`}
+                : 'text-[#3d342b] font-semibold drop-shadow-[0_0_20px_rgba(255,253,248,1)]'}`}
             >
               {content.hero.subtitle}
             </p>

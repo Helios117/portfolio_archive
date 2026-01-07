@@ -394,9 +394,9 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
     
     const time = state.clock.getElapsedTime();
     
-    // Orbit / Sweep animation path
-    // Moves in a wide arc from right to left, slightly receding into Z
-    const sweepSpeed = 0.15;
+    // Faster Orbit / Sweep animation path
+    // Moves in a wide arc from right to left
+    const sweepSpeed = 0.25; // Increased speed
     const sweepRadius = 6;
     const sweepX = Math.cos(time * sweepSpeed) * sweepRadius;
     const sweepZ = Math.sin(time * sweepSpeed) * 2 - 2; // Recede slightly
@@ -406,14 +406,20 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
 
     // Banking turn effect based on position
     groupRef.current.rotation.y = time * sweepSpeed + Math.PI; // Face direction of travel
-    groupRef.current.rotation.z = Math.sin(time * sweepSpeed) * 0.1; // Bank into the turn
+    groupRef.current.rotation.z = Math.sin(time * sweepSpeed) * 0.15; // Increased bank into the turn
+
+    // Lock axis to always face generally forward/towards viewer (the "Earth" in text)
+    // We override the rotation Y slightly to keep the chariot visible
+    const lookAtPos = new THREE.Vector3(0, 1, 5); // Approximate camera/text position
+    groupRef.current.lookAt(lookAtPos);
+    // Adjust rotation to ensure upright orientation and proper side view
+    groupRef.current.rotateY(Math.PI / 2); // Rotate 90 deg to show side profile as it orbits
     
     // Parallax tilt based on mouse position (add on top of animation)
     const targetRotationX = pointer.y * 0.08;
-    const targetRotationZ = -pointer.x * 0.05;
     
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(
-      groupRef.current.rotation.x,
+    groupRef.current.rotation.x += THREE.MathUtils.lerp(
+      0,
       targetRotationX,
       0.03
     );
@@ -421,12 +427,12 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
 
   return (
     <Float
-      speed={1.5}
+      speed={2} // Faster float
       rotationIntensity={0.2}
       floatIntensity={0.5}
       floatingRange={[-0.2, 0.2]}
     >
-      <group ref={groupRef} scale={scale}>
+      <group ref={groupRef} scale={scale * 0.85}> {/* Reduced scale slightly for mobile */}
         {/* The Sun above */}
         <HeliosSun isDark={isDark} />
         
