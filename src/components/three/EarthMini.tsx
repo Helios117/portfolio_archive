@@ -1,16 +1,25 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, Suspense } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { TextureLoader } from 'three';
 import * as THREE from 'three';
-import { Float, Sphere } from '@react-three/drei';
+import { Float } from '@react-three/drei';
+
+// Fallback component while textures load
+function EarthFallback({ isDark }: { isDark: boolean }) {
+  return (
+    <mesh>
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshStandardMaterial color={isDark ? '#1a3b5c' : '#2E6F9E'} wireframe />
+    </mesh>
+  );
+}
 
 function TexturedEarth({ isDark }: { isDark: boolean }) {
   const earthRef = useRef<THREE.Group>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.PointLight>(null);
 
-  // Load high-res textures
-  // Using reliable standard NASA-based textures for Earth
+  // Load textures inside Suspense
   const [colorMap, bumpMap, specularMap, cloudsMap] = useLoader(TextureLoader, [
     '/textures/earth_daymap.jpg',
     '/textures/earth_bump.jpg',
@@ -45,14 +54,14 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
       {/* Dynamic Light Source (The Chariot) */}
       <pointLight 
         ref={lightRef}
-        intensity={isDark ? 2.5 : 3.5} 
+        intensity={isDark ? 3.0 : 4.0} 
         color="#FFD700" 
         distance={10} 
         decay={2} 
       />
       
-      {/* Ambient fill - dim to allow dramatic lighting */}
-      <ambientLight intensity={isDark ? 0.05 : 0.5} />
+      {/* Ambient fill */}
+      <ambientLight intensity={isDark ? 0.05 : 0.6} />
 
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
         <group ref={earthRef}>
@@ -78,6 +87,7 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
               opacity={0.4} 
               blending={THREE.AdditiveBlending}
               side={THREE.DoubleSide}
+              depthWrite={false} // Fix transparency sorting issues
             />
           </mesh>
 
@@ -87,9 +97,10 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
             <meshBasicMaterial 
               color="#4B8BBE" 
               transparent 
-              opacity={0.1} 
+              opacity={0.15} 
               side={THREE.BackSide} 
               blending={THREE.AdditiveBlending}
+              depthWrite={false}
             />
           </mesh>
         </group>
@@ -100,13 +111,15 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
 
 export default function EarthMini({ isDark = false }: { isDark?: boolean }) {
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
       <Canvas
         dpr={[1, 2]}
         gl={{ alpha: true, antialias: true }}
         camera={{ position: [0, 0, 2.8], fov: 45 }}
       >
-        <TexturedEarth isDark={isDark} />
+        <Suspense fallback={<EarthFallback isDark={isDark} />}>
+          <TexturedEarth isDark={isDark} />
+        </Suspense>
       </Canvas>
     </div>
   );
