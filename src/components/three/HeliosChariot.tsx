@@ -389,16 +389,26 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
   const groupRef = useRef<THREE.Group>(null);
   const { pointer } = useThree();
 
-  // Parallax effect
   useFrame((state) => {
     if (!groupRef.current) return;
     
     const time = state.clock.getElapsedTime();
     
-    // Slow rotation
-    groupRef.current.rotation.y = time * 0.05 + Math.PI * 0.1;
+    // Orbit / Sweep animation path
+    // Moves in a wide arc from right to left, slightly receding into Z
+    const sweepSpeed = 0.15;
+    const sweepRadius = 6;
+    const sweepX = Math.cos(time * sweepSpeed) * sweepRadius;
+    const sweepZ = Math.sin(time * sweepSpeed) * 2 - 2; // Recede slightly
     
-    // Parallax tilt based on mouse position
+    groupRef.current.position.x = sweepX;
+    groupRef.current.position.z = sweepZ;
+
+    // Banking turn effect based on position
+    groupRef.current.rotation.y = time * sweepSpeed + Math.PI; // Face direction of travel
+    groupRef.current.rotation.z = Math.sin(time * sweepSpeed) * 0.1; // Bank into the turn
+    
+    // Parallax tilt based on mouse position (add on top of animation)
     const targetRotationX = pointer.y * 0.08;
     const targetRotationZ = -pointer.x * 0.05;
     
@@ -407,18 +417,14 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
       targetRotationX,
       0.03
     );
-    groupRef.current.rotation.z = THREE.MathUtils.lerp(
-      groupRef.current.rotation.z,
-      targetRotationZ,
-      0.03
-    );
   });
 
   return (
     <Float
-      speed={1.2}
-      rotationIntensity={0.1}
-      floatIntensity={0.3}
+      speed={1.5}
+      rotationIntensity={0.2}
+      floatIntensity={0.5}
+      floatingRange={[-0.2, 0.2]}
     >
       <group ref={groupRef} scale={scale}>
         {/* The Sun above */}

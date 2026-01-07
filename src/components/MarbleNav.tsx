@@ -227,6 +227,18 @@ export default function MarbleNav({ className = '' }: MarbleNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const { theme } = useTheme();
+  const [showLogo, setShowLogo] = useState(false);
+
+  // Track scroll for logo visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show logo after scrolling down 100px (adjust as needed for the transition point)
+      setShowLogo(window.scrollY > 100);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Track current section via IntersectionObserver
   useEffect(() => {
@@ -304,8 +316,12 @@ export default function MarbleNav({ className = '' }: MarbleNavProps) {
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            animate={{ 
+              opacity: showLogo ? 1 : 0, 
+              x: showLogo ? 0 : -30,
+              pointerEvents: showLogo ? 'auto' : 'none'
+            }}
+            transition={{ duration: 0.5 }}
             className="flex items-center gap-2 sm:gap-3"
           >
             {/* Helios Sun Logo */}

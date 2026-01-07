@@ -1,10 +1,11 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import content from '@/data/content';
 import { useTheme } from '@/context/ThemeContext';
+import { EarthIcon, MoonIcon } from './CelestialIcons';
 
 // Dynamic import for 3D scene to avoid SSR issues
 const HeroScene = dynamic(() => import('./three/HeroScene'), {
@@ -24,15 +25,20 @@ const HeroScene = dynamic(() => import('./three/HeroScene'), {
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress, scrollY } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.5]); // Scale down to match navbar logo size approx
+  const y = useTransform(scrollYProgress, [0, 0.5], [0, -window.innerHeight * 0.45]); // Move up towards navbar
+  const x = useTransform(scrollYProgress, [0, 0.5], [0, -window.innerWidth * 0.35]); // Move left towards navbar logo position
 
+  // Smooth out the transform values
+  const smoothScale = useSpring(scale, { stiffness: 100, damping: 20 });
+  const smoothY = useSpring(y, { stiffness: 100, damping: 20 });
+  
   return (
     <section
       ref={containerRef}
@@ -46,11 +52,16 @@ export default function Hero() {
 
       {/* Content Overlay */}
       <motion.div
-        style={{ opacity, scale, y }}
-        className="relative z-10 h-full flex flex-col items-center justify-center px-6"
+        className="relative z-10 h-full flex flex-col items-center pt-[15vh] px-6"
       >
-        {/* Main Title */}
+        {/* Main Title Group - Transitions to Navbar Logo */}
         <motion.div
+          style={{ 
+            opacity, 
+            scale: smoothScale,
+            y: smoothY,
+            // x: x // Optional: only if we want to move it exactly to top-left. For now, fading out and let navbar fade in is cleaner.
+          }}
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
@@ -65,14 +76,26 @@ export default function Hero() {
           />
 
           {/* Title */}
-          <h1 className="font-cinzel text-4xl sm:text-5xl md:text-7xl lg:text-8xl tracking-wider mb-4">
-            <span className="block text-gold-gradient drop-shadow-[0_2px_10px_rgba(212,175,55,0.5)]">
-              {content.hero.title.split(' ')[0]}
+          <h1 className="font-cinzel text-5xl sm:text-6xl md:text-8xl lg:text-9xl tracking-wider mb-4 flex flex-col items-center">
+            <span className="flex items-center gap-2 sm:gap-4 text-gold-gradient drop-shadow-[0_2px_10px_rgba(212,175,55,0.5)]">
+              <span>H</span>
+              <span>E</span>
+              <span>L</span>
+              <span>I</span>
+              {/* O replaced by Icon */}
+              <div className="w-[0.7em] h-[0.7em] relative flex items-center justify-center">
+                {theme === 'dark' ? (
+                  <MoonIcon className="w-full h-full text-gold-100 animate-pulse" />
+                ) : (
+                  <EarthIcon className="w-full h-full text-blue-500 animate-spin-slow" />
+                )}
+              </div>
+              <span>S</span>
             </span>
-            <span className={`block text-xl sm:text-2xl md:text-4xl lg:text-5xl mt-2 tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.3em] transition-colors duration-500
+            <span className={`block text-xl sm:text-2xl md:text-4xl lg:text-5xl mt-4 tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.3em] transition-colors duration-500
               ${theme === 'dark' 
                 ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' 
-                : 'text-[#1a1815]'}`}>
+                : 'text-[#3d342b] font-semibold'}`}>
               {content.hero.title.split(' ').slice(1).join(' ')}
             </span>
           </h1>
@@ -104,7 +127,7 @@ export default function Hero() {
             <p className={`relative font-cormorant text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed italic transition-colors duration-500 px-4 sm:px-0
               ${theme === 'dark' 
                 ? 'text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]' 
-                : 'text-[#1a1815] drop-shadow-[0_0_20px_rgba(255,253,248,1)]'}`}
+                : 'text-[#4a3f35] font-medium drop-shadow-[0_0_20px_rgba(255,253,248,1)]'}`}
             >
               {content.hero.subtitle}
             </p>
