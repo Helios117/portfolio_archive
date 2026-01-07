@@ -46,6 +46,21 @@
   --font-cormorant: 'Cormorant Garamond', serif;
 }
 
+@layer components {
+  /* High contrast light mode overrides */
+  .text-amber-700 {
+    color: #92400e; /* Darker amber for better contrast on light backgrounds */
+  }
+  
+  .text-amber-600 {
+    color: #b45309; /* Darker amber-600 */
+  }
+
+  .text-gold-500 {
+    color: #ca8a04; /* Darker gold/yellow for light mode readability if needed */
+  }
+}
+
 :root {
   --background: #0a0908;
   --foreground: #f5f5f0;
