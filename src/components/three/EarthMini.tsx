@@ -49,12 +49,12 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
   return (
     <group>
       {/* Strong Ambient Light for Base Visibility - slightly cooler/bluer */}
-      <ambientLight intensity={isDark ? 0.4 : 0.6} color="#b0d8ff" />
+      <ambientLight intensity={isDark ? 0.6 : 0.8} color="#b0d8ff" />
       
       {/* Dynamic Chariot Light - Gold/Orange for contrast */}
       <pointLight 
         ref={lightRef}
-        intensity={isDark ? 8.0 : 12.0} // Very strong intensity to be obvious
+        intensity={isDark ? 10.0 : 15.0} // Even stronger intensity for bigger difference
         color="#ffaa00" 
         distance={6}
         decay={1.5}
@@ -64,7 +64,7 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
       <directionalLight position={[2, 2, 5]} intensity={isDark ? 0.5 : 0.8} color="#ffffff" />
 
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
-        <group ref={earthRef}>
+        <group ref={earthRef} rotation={[0, -Math.PI / 2, 0]}> {/* Initial rotation to show continents */}
           {/* Earth Sphere - Standard Material with high metalness/roughness for reflections */}
           <mesh>
             <sphereGeometry args={[1, 64, 64]} />

@@ -79,8 +79,8 @@ export default function Footer() {
           </motion.div>
 
           {/* Quote */}
-          <p className={`font-cormorant italic text-sm sm:text-base mb-6 max-w-md mx-auto px-4 sm:px-0 transition-colors duration-500
-            ${isDark ? 'text-stone-400' : 'text-stone-500'}`}>
+          <p className={`font-cormorant italic text-sm sm:text-base mb-6 max-w-md mx-auto px-4 sm:px-0 transition-colors duration-500 font-medium
+            ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
             &ldquo;Every artifact tells a story, every line of code a verse in the epic of creation.&rdquo;
           </p>
 
