@@ -111,6 +111,26 @@ function ArtifactCard({ project, index, onClick, isDark }: ArtifactCardProps) {
               }}
             />
 
+            {/* Project Media Preview (Video/GIF) */}
+            {isHovered && project.hoverVideo && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="absolute inset-0 z-0 bg-black"
+              >
+                <video
+                  src={project.hoverVideo}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover opacity-80"
+                />
+              </motion.div>
+            )}
+
             {/* Project number / artifact ID */}
             <div className="absolute bottom-4 right-4 z-10">
               <span className={`font-cinzel text-6xl font-bold transition-colors duration-500

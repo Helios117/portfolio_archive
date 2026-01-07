@@ -14,6 +14,7 @@ export interface Project {
   longDescription?: string;
   tags: string[];
   image: string;
+  hoverVideo?: string; // Optional URL for a video preview (MP4/WebM)
   liveLink?: string;
   githubLink?: string;
   featured?: boolean;
