@@ -85,7 +85,7 @@ export default function Hero() {
               <span>L</span>
               <span>I</span>
               {/* O replaced by Icon */}
-              <div className="w-[0.8em] h-[0.8em] relative flex items-center justify-center -mb-2 sm:-mb-4">
+              <div className="w-[0.7em] h-[0.7em] sm:w-[0.8em] sm:h-[0.8em] relative flex items-center justify-center -mb-2 sm:-mb-4 self-center mt-2 sm:mt-0">
                 {theme === 'dark' ? (
                   <MoonIcon className="w-full h-full text-gold-100 animate-pulse" />
                 ) : (

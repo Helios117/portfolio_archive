@@ -397,9 +397,12 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
     // Faster Orbit / Sweep animation path
     // Moves in a wide arc from right to left
     const sweepSpeed = 0.25; // Increased speed
-    const sweepRadius = 6;
+    // Mobile adjustment: Tighter orbit to bring it into frame faster
+    const isMobile = window.innerWidth < 768;
+    const sweepRadius = isMobile ? 3.5 : 6; 
+    
     const sweepX = Math.cos(time * sweepSpeed) * sweepRadius;
-    const sweepZ = Math.sin(time * sweepSpeed) * 2 - 2; // Recede slightly
+    const sweepZ = Math.sin(time * sweepSpeed) * (isMobile ? 1.5 : 2) - (isMobile ? 1.5 : 2); // Recede slightly
     
     groupRef.current.position.x = sweepX;
     groupRef.current.position.z = sweepZ;
