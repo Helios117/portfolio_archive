@@ -20,15 +20,13 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
   const lightRef = useRef<THREE.PointLight>(null);
 
   // Load textures inside Suspense
-  const [colorMap, bumpMap, specularMap, cloudsMap] = useLoader(TextureLoader, [
+  const [colorMap, cloudsMap] = useLoader(TextureLoader, [
     '/textures/earth_daymap.jpg',
-    '/textures/earth_bump.jpg',
-    '/textures/earth_specular.jpg',
     '/textures/earth_clouds.jpg'
   ]);
 
   useFrame((state) => {
-    if (!earthRef.current || !lightRef.current || !cloudsRef.current) return;
+    if (!earthRef.current || !cloudsRef.current) return;
     
     const time = state.clock.getElapsedTime();
     
@@ -37,44 +35,25 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
     
     // Rotate clouds slightly faster than earth for realism
     cloudsRef.current.rotation.y = time * 0.07;
-
-    // Orbit the light to match Chariot's movement
-    // Chariot speed was 0.25
-    const orbitSpeed = 0.25;
-    const radius = 3;
-    
-    // Position light to simulate the Chariot orbiting
-    lightRef.current.position.x = Math.cos(time * orbitSpeed) * radius;
-    lightRef.current.position.z = Math.sin(time * orbitSpeed) * radius;
-    lightRef.current.position.y = Math.sin(time * 0.5) * 0.5;
   });
 
   return (
     <group>
-      {/* Dynamic Light Source (The Chariot) */}
-      <pointLight 
-        ref={lightRef}
-        intensity={isDark ? 3.0 : 4.0} 
-        color="#FFD700" 
-        distance={10} 
-        decay={2} 
-      />
+      {/* Strong Ambient Light for Visibility */}
+      <ambientLight intensity={isDark ? 0.8 : 1.2} />
       
-      {/* Ambient fill */}
-      <ambientLight intensity={isDark ? 0.05 : 0.6} />
+      {/* Directional Light for shape definition */}
+      <directionalLight position={[2, 2, 5]} intensity={isDark ? 1.0 : 1.5} />
 
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
         <group ref={earthRef}>
-          {/* Earth Sphere */}
+          {/* Earth Sphere - Simplified Material for better visibility */}
           <mesh>
             <sphereGeometry args={[1, 64, 64]} />
-            <meshPhongMaterial 
+            <meshStandardMaterial 
               map={colorMap} 
-              bumpMap={bumpMap} 
-              bumpScale={0.05}
-              specularMap={specularMap}
-              specular={new THREE.Color('grey')}
-              shininess={10}
+              roughness={0.4}
+              metalness={0.1}
             />
           </mesh>
           
@@ -87,19 +66,6 @@ function TexturedEarth({ isDark }: { isDark: boolean }) {
               opacity={0.4} 
               blending={THREE.AdditiveBlending}
               side={THREE.DoubleSide}
-              depthWrite={false} // Fix transparency sorting issues
-            />
-          </mesh>
-
-          {/* Atmosphere Glow (Rim Light) */}
-          <mesh scale={[1.15, 1.15, 1.15]}>
-            <sphereGeometry args={[1, 32, 32]} />
-            <meshBasicMaterial 
-              color="#4B8BBE" 
-              transparent 
-              opacity={0.15} 
-              side={THREE.BackSide} 
-              blending={THREE.AdditiveBlending}
               depthWrite={false}
             />
           </mesh>

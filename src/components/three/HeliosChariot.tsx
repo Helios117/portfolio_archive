@@ -396,16 +396,34 @@ export default function HeliosChariot({ scale = 1, isDark = true }: HeliosChario
     
     // Faster Orbit / Sweep animation path
     // Moves in a wide arc from right to left
-    const sweepSpeed = 0.25; // Increased speed
-    // Mobile adjustment: Tighter orbit to bring it into frame faster
+    const sweepSpeed = 0.25; 
+    // Mobile adjustment: Much tighter orbit and adjusted center to ensure visibility
     const isMobile = window.innerWidth < 768;
-    const sweepRadius = isMobile ? 3.5 : 6; 
+    const sweepRadius = isMobile ? 1.8 : 6; 
     
-    const sweepX = Math.cos(time * sweepSpeed) * sweepRadius;
-    const sweepZ = Math.sin(time * sweepSpeed) * (isMobile ? 1.5 : 2) - (isMobile ? 1.5 : 2); // Recede slightly
+    // Calculate position
+    const cosTime = Math.cos(time * sweepSpeed);
+    const sinTime = Math.sin(time * sweepSpeed);
+
+    // X position: sweep back and forth
+    const sweepX = cosTime * sweepRadius;
+    
+    // Z position: 
+    // On mobile: keep it closer to camera (positive Z) and reduce depth variation
+    // On desktop: recede more for dramatic effect
+    const zOffset = isMobile ? 0.5 : -2; 
+    const zDepth = isMobile ? 1.0 : 2.0;
+    const sweepZ = sinTime * zDepth + zOffset;
     
     groupRef.current.position.x = sweepX;
     groupRef.current.position.z = sweepZ;
+    
+    // Adjust Y position specifically for mobile to be lower/more centered if needed
+    if (isMobile) {
+      groupRef.current.position.y = -0.5; // Lower it slightly to be more visible under text
+    } else {
+      groupRef.current.position.y = 0;
+    }
 
     // Banking turn effect based on position
     groupRef.current.rotation.y = time * sweepSpeed + Math.PI; // Face direction of travel
