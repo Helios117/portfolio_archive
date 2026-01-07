@@ -45,6 +45,37 @@ export default function Contact() {
     window.location.href = `mailto:${content.contact.email}?subject=${subject}&body=${body}`;
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Check if formAction is configured
+    if (!content.contact.formAction || content.contact.formAction.includes('your-id-here')) {
+      handleSendMessage(); // Fallback to mailto
+      return;
+    }
+
+    try {
+      const response = await fetch(content.contact.formAction, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formState)
+      });
+
+      if (response.ok) {
+        alert("Message summoned successfully!");
+        setFormState({ name: '', email: '', message: '' });
+      } else {
+        alert("Failed to summon message. Please try again.");
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert("Failed to summon message. Please try again.");
+    }
+  };
+
   return (
     <section id="contact" className="relative py-16 sm:py-24 md:py-32 overflow-hidden">
       {/* Background effects */}
@@ -166,10 +197,10 @@ export default function Contact() {
                 />
               </div>
 
-              {/* Send Message button - opens mailto */}
+              {/* Send Message button - submits form or opens mailto */}
               <motion.button
                 type="button"
-                onClick={handleSendMessage}
+                onClick={(e) => handleSubmit(e as unknown as React.FormEvent)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full py-4 bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600
